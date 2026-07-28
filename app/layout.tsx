@@ -23,16 +23,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable, oxaniumHeading.variable)}
-    >
+      className={cn("antialiased", fontMono.variable, "font-sans", inter.variable, oxaniumHeading.variable)}>
       <body>
-        <Navbar />
-
-        <ThemeProvider attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange>{children}</ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
-    </html>
+    </html >
   )
 }

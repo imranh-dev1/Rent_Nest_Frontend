@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     Heart,
+    Home,
     Menu,
     Search,
     User,
@@ -102,16 +103,21 @@ export default function Navbar() {
                         <Heart className="size-5" />
                     </Button>
 
-                    <Button
-                        variant="outline"
-                    >
-                        <User className="mr-2 size-4" />
-                        Login
-                    </Button>
+                    <Link href="/auth/login">
+                        <Button className="cursor-pointer"
+                            variant="outline">
+                            <User className="mr-2 size-4" />
+                            Login
+                        </Button>
+                    </Link>
 
-                    <Button>
-                        List Property
-                    </Button>
+                    <Link href="/properties">
+
+                        <Button className="cursor-pointer">
+                            <Home className="mr-2 size-4" />
+                            List Property
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Mobile */}
