@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Inter, Oxanium } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/shared/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const oxaniumHeading = Oxanium({ subsets: ['latin'], variable: '--font-heading' });
 
@@ -26,8 +26,8 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable, oxaniumHeading.variable)}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Navbar />
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html >
