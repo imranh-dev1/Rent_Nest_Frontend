@@ -17,3 +17,16 @@ export type LoginState = {
         password?: string[];
     };
 };
+
+export interface RegisterState {
+    success: boolean;
+    message: string;
+    errors?: {
+        name?: string[];
+        email?: string[];
+        password?: string[];
+        confirmPassword?: string[];
+        role?: string[];
+        profilePhoto?: string[];
+    };
+}
