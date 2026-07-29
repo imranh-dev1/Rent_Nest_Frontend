@@ -260,6 +260,7 @@ export default function LoginForm() {
               alt="Modern apartment"
               fill
               priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
             />
 

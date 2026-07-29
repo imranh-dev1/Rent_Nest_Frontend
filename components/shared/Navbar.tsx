@@ -103,7 +103,7 @@ export default function Navbar() {
                         <Heart className="size-5" />
                     </Button>
 
-                    <Link href="/auth/login">
+                    <Link href="/login">
                         <Button className="cursor-pointer"
                             variant="outline">
                             <User className="mr-2 size-4" />
