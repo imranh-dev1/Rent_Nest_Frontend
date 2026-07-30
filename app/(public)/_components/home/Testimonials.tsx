@@ -77,7 +77,7 @@ export default function Testimonials() {
                 </p>
             </div>
 
-            <Carousel className="container mx-auto mt-10" opts={{ align: "start", loop: true, }} plugins={[
+            <Carousel className="container mx-auto mt-10 " opts={{ align: "start", loop: true, }} plugins={[
                 Autoplay({
                     delay: 4000,
                     stopOnInteraction: false,

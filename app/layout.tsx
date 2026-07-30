@@ -4,7 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
-
+import Footer from "@/components/footer";
 const oxaniumHeading = Oxanium({ subsets: ['latin'], variable: '--font-heading' });
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
@@ -28,6 +28,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
           <Toaster />
+          <Footer />
         </ThemeProvider>
       </body>
     </html >
