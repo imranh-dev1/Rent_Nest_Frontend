@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
     Heart,
     Home,
@@ -39,6 +39,8 @@ import {
     Settings,
     UserIcon,
 } from "lucide-react";
+import { logout } from "@/app/(auth)/_actions/auth/logout";
+import { toast } from "sonner";
 
 const navItems = [
     {
@@ -73,8 +75,18 @@ interface NavbarProps {
 
 export default function Navbar({ user }: NavbarProps) {
     const pathname = usePathname();
+    const router = useRouter();
 
-    console.log(user)
+    const handleLogout = async () => {
+        const result = await logout();
+
+        if (result.success) {
+            toast.success(result.message);
+            setTimeout(() => {
+                router.push("/");
+            }, 1000);
+        }
+    };
 
     const [open, setOpen] = useState(false);
 
@@ -204,7 +216,10 @@ export default function Navbar({ user }: NavbarProps) {
 
                                 <DropdownMenuSeparator />
 
-                                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                <DropdownMenuItem
+                                    onClick={handleLogout}
+                                    className="cursor-pointer text-red-600"
+                                >
                                     <LogOut className="mr-2 h-4 w-4" />
                                     Logout
                                 </DropdownMenuItem>
