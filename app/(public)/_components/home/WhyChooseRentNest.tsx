@@ -131,11 +131,11 @@ export default function WhyChooseRentNest() {
 
                         {/* Floating Card */}
 
-                        <Card className="absolute -bottom-8 right-5 hidden w-54 rounded-3xl border-0 shadow-2xl lg:block">
+                        <Card className="absolute -bottom-8 right-5 hidden w-54 rounded-3xl border-0 shadow-2xl lg:block p-8">
                             <CardContent className="text-center">
                                 <p className="text-sm text-muted-foreground">Trusted by</p>
 
-                                <h4 className="mt-2 text-3xl font-bold">15,000+</h4>
+                                <h4 className="mt-2 text-3xl font-bold"> 15,000+</h4>
 
                                 <p className="text-sm mt-2 text-muted-foreground">Users worldwide</p>
                             </CardContent>
