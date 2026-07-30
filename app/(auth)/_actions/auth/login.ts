@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { loginSchema } from "@/validations/auth.validation";
 import { LoginState } from "@/types/auth";
+import { authenticateUser } from "@/lib/auth";
 
 
 export async function loginAction(
@@ -34,48 +35,13 @@ export async function loginAction(
 
     const result = await response.json();
 
-    console.log(result)
-
     if (!response.ok) {
-        return {
-            success: false,
-            message: result.message || "Login failed.",
-        };
+        return result
     }
 
     if (result.success && result.data) {
-        const cookieStore = await cookies();
-        cookieStore.set("accessToken", result.data.accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            path: "/",
-            maxAge: 60 * 60 * 48,
-        });
-
-        cookieStore.set("refreshToken", result.data.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7,
-        });
-
-        const decoded = jwt.decode(result.data.accessToken) as JwtPayload;
-
-        if (decoded.role === "ADMIN") {
-            redirect("/dashboard/admin");
-        } else if (decoded.role === "LANDLORD") {
-            redirect("/dashboard/landlord");
-        } else if (decoded.role === "TENANT") {
-            redirect("/dashboard/tenant");
-        }
+        await authenticateUser(result.data.accessToken, result.data.refreshToken);
     }
 
-    return {
-        success: true,
-        message: "Login success",
-    };
-
-
+    return result;
 }

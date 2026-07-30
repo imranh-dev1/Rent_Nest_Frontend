@@ -1,3 +1,4 @@
+import { authenticateUser } from "@/lib/auth";
 import { RegisterState } from "@/types/auth";
 import { registerSchema } from "@/validations/auth.validation";
 
@@ -38,8 +39,15 @@ export async function registerAction(
         body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
+    const result = await response.json();
 
-    
-    return data;
+    if (!response.ok) {
+        return result
+    }
+
+    if (result.success && result.data) {
+        await authenticateUser(result.data.accessToken, result.data.refreshToken);
+    }
+
+    return result;
 }
