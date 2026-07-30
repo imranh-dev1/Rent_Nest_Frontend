@@ -1,13 +1,12 @@
 import Navbar from "@/components/shared/Navbar";
+import { getCurrentUser } from "@/services/auth.service";
 
-export default function MainLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export default async function MainLayout({ children, }: { children: React.ReactNode; }) {
+    const user = await getCurrentUser()
+
     return (
         <>
-            <Navbar /> 
+            <Navbar user={user} />
             <main>{children}</main>
         </>
     );

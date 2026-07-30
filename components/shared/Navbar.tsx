@@ -16,6 +16,29 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { IUser } from "@/types/auth";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar";
+
+import {
+    LayoutDashboard,
+    LogOut,
+    Settings,
+    UserIcon,
+} from "lucide-react";
 
 const navItems = [
     {
@@ -44,8 +67,14 @@ const navItems = [
     },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+    user: IUser | null;
+}
+
+export default function Navbar({ user }: NavbarProps) {
     const pathname = usePathname();
+
+    console.log(user)
 
     const [open, setOpen] = useState(false);
 
@@ -103,15 +132,94 @@ export default function Navbar() {
                         <Heart className="size-5" />
                     </Button>
 
-                    <Link href="/login">
-                        <Button className="cursor-pointer"
-                            variant="outline">
-                            <User className="mr-2 size-4" />
-                            Login
-                        </Button>
-                    </Link>
+                    {user ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-10 w-10 rounded-full p-0 cursor-pointer">
+                                    <Avatar className="h-10 w-10 border border-primary">
+                                        <AvatarImage
+                                            src={user.profileImg ?? ""}
+                                            alt={user.name}
+                                        />
+                                        <AvatarFallback>
+                                            {user.name.slice(0, 2).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
 
-                    <Link href="/properties">
+                            <DropdownMenuContent
+                                align="end"
+                                className="w-72"
+                            >
+                                {/* Header */}
+                                <div className="flex items-center gap-3 p-3">
+                                    <Avatar className="h-12 w-12 border border-primary">
+                                        <AvatarImage src={user.profileImg ?? ""} />
+                                        <AvatarFallback>
+                                            {user.name.slice(0, 2).toUpperCase()}
+                                        </AvatarFallback>
+                                    </Avatar>
+
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold">
+                                            {user.name}
+                                        </span>
+
+                                        <span className="text-xs text-muted-foreground">
+                                            {user.email}
+                                        </span>
+
+                                        <span className="mt-1 w-fit bg-primary px-2 py-1 text-xs font-medium text-white">
+                                            {user.role}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <DropdownMenuSeparator />
+
+                                <DropdownMenuItem asChild>
+                                    <Link href="/dashboard/tenant">
+                                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                                        Dashboard
+                                    </Link>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem asChild>
+                                    <Link href="/dashboard/tenant/profile">
+                                        <User className="mr-2 h-4 w-4" />
+                                        My Profile
+                                    </Link>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem asChild>
+                                    <Link href="/dashboard/tenant/settings">
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        Settings
+                                    </Link>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuSeparator />
+
+                                <DropdownMenuItem className="text-destructive focus:text-destructive">
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Logout
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Link href="/login">
+                            <Button variant="outline">
+                                <UserIcon className="mr-2 size-4" />
+                                Login
+                            </Button>
+                        </Link>
+                    )}
+
+                    <Link className="ml-2" href="/properties">
 
                         <Button className="cursor-pointer">
                             <Home className="mr-2 size-4" />
@@ -132,38 +240,40 @@ export default function Navbar() {
                 </Button>
             </div>
 
-            {open && (
-                <div className="border-t bg-background lg:hidden">
-                    <nav className="container mx-auto flex flex-col gap-2 px-4 py-4">
+            {
+                open && (
+                    <div className="border-t bg-background lg:hidden">
+                        <nav className="container mx-auto flex flex-col gap-2 px-4 py-4">
 
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => setOpen(false)}
-                                className={cn(
-                                    "rounded-md px-3 py-2 text-sm transition hover:bg-muted",
-                                    pathname === item.href &&
-                                    "bg-muted text-primary"
-                                )}
+                            {navItems.map((item) => (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setOpen(false)}
+                                    className={cn(
+                                        "rounded-md px-3 py-2 text-sm transition hover:bg-muted",
+                                        pathname === item.href &&
+                                        "bg-muted text-primary"
+                                    )}
+                                >
+                                    {item.title}
+                                </Link>
+                            ))}
+
+                            <Button
+                                className="mt-4"
+                                variant="outline"
                             >
-                                {item.title}
-                            </Link>
-                        ))}
+                                Login
+                            </Button>
 
-                        <Button
-                            className="mt-4"
-                            variant="outline"
-                        >
-                            Login
-                        </Button>
-
-                        <Button>
-                            List Property
-                        </Button>
-                    </nav>
-                </div>
-            )}
-        </header>
+                            <Button>
+                                List Property
+                            </Button>
+                        </nav>
+                    </div>
+                )
+            }
+        </header >
     );
 }

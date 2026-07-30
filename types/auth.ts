@@ -30,3 +30,15 @@ export interface RegisterState {
         profilePhoto?: string[];
     };
 }
+
+export interface IUser {
+    id: string;
+    name: string;
+    email: string;
+    phone: string | null;
+    role: "ADMIN" | "LANDLORD" | "TENANT";
+    status: "ACTIVE" | "BLOCKED";
+    profileImg: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
