@@ -1,10 +1,20 @@
-import { Button } from "@/components/ui/button"
+import { getProperties } from "./_actions/property/getProperties";
 import Banner from "./_components/home/Banner"
+import FeaturedProperties from "./_components/home/FeaturedProperties";
+import PropertyCategories from "./_components/home/propertyCategories";
+import WhyChooseRentNest from "./_components/home/WhyChooseRentNest";
 
-export default function Page() {
+export default async function Page() {
+  const properties = await getProperties();
+
   return (
     <>
       <Banner />
+      <FeaturedProperties properties={properties} />
+
+      <PropertyCategories />
+
+      <WhyChooseRentNest />
     </>
   )
 }
