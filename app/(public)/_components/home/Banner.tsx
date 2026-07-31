@@ -28,7 +28,7 @@ export default function Banner() {
                     <div className="max-w-3xl text-white">
                         {/* Badge */}
 
-                        <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm backdrop-blur">
+                        <span className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm backdrop-blur">
                             <HousePlug className="text-primary mr-3" /> Trusted Rental Marketplace
                         </span>
 

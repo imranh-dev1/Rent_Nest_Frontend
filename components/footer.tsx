@@ -108,6 +108,7 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+
   return (
     <footer className="border-t bg-muted/20">
 
@@ -309,8 +310,7 @@ export default function Footer() {
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
 
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} RentNest. All rights
-              reserved.
+              © 2026 RentNest. All rights reserved.
             </p>
 
             <div className="flex flex-wrap items-center gap-6">
