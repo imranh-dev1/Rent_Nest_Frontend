@@ -31,7 +31,7 @@ export default async function PropertiesPage({
         sortOrder: (params.sortOrder as "asc" | "desc") ?? "desc",
     });
 
-    console.log(properties, meta)
+    // console.log(properties, meta)
 
 
     return (
