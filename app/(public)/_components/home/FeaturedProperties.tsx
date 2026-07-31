@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import PropertyCard from "@/components/property/PropertyCard";
 import { IProperty } from "@/types/property";
 import { MoveRight } from "lucide-react";
+import { Pagination } from "@/components/ui/pagination";
 
 interface FeaturedProperties {
     properties: IProperty[];
@@ -44,7 +45,7 @@ export default function FeaturedProperties({ properties }: FeaturedProperties) {
                         key={property.id}
                         property={property}
                     />))}
-                </div>
+                </div> 
             </div>
         </section>
     );

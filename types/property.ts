@@ -33,3 +33,29 @@ export interface IProperty {
     category: ICategory;
     landlord: ILandlord;
 }
+
+export interface PropertySearchParams {
+    page?: string;
+    limit?: string;
+    search?: string;
+    city?: string;
+    categoryId?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    availability?: string;
+    sortBy?: string;
+    sortOrder?: string;
+}
+
+export interface GetPropertiesParams {
+    page?: number;
+    limit?: number;
+    search?: string;
+    city?: string;
+    categoryId?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    availability?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+}
