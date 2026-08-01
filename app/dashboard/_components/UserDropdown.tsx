@@ -35,10 +35,8 @@ interface UserDropdownProps {
   };
 }
 
-export default function UserDropdown({
-  user,
-}: UserDropdownProps) {
-  const initials = user.name
+export default function UserDropdown({ user }: UserDropdownProps) {
+  const initials = user?.name
     .split(" ")
     .map((item) => item[0])
     .join("")
@@ -49,7 +47,7 @@ export default function UserDropdown({
       <DropdownMenuTrigger asChild>
         <button className="rounded-full outline-none ring-offset-background transition hover:opacity-90 focus:ring-2 focus:ring-primary">
           <Avatar className="h-10 w-10 cursor-pointer">
-            <AvatarImage src={user.image ?? ""} />
+            <AvatarImage src={user?.image ?? ""} />
 
             <AvatarFallback>
               {initials}
@@ -65,15 +63,15 @@ export default function UserDropdown({
         <DropdownMenuLabel>
           <div className="space-y-1">
             <p className="font-semibold">
-              {user.name}
+              {user?.name}
             </p>
 
             <p className="text-xs text-muted-foreground">
-              {user.email}
+              {user?.email}
             </p>
 
             <Badge className="mt-2">
-              {user.role}
+              {user?.role}
             </Badge>
           </div>
         </DropdownMenuLabel>
@@ -82,7 +80,7 @@ export default function UserDropdown({
 
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={`/dashboard/${user.role.toLowerCase()}/profile`}>
+            <Link href={`/dashboard/${user?.role.toLowerCase()}/profile`}>
               <User className="mr-2 h-4 w-4" />
               Profile
             </Link>

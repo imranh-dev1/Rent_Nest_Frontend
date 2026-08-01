@@ -50,7 +50,7 @@ export default function MobileSidebar({
 
                 <ScrollArea className="h-[calc(100vh-140px)] px-4 py-6">
                     <div className="space-y-2">
-                        {routes.map((route) => (
+                        {routes?.map((route) => (
                             <NavItem
                                 key={route.href}
                                 href={route.href}

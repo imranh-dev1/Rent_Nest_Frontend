@@ -1,0 +1,156 @@
+import Link from "next/link";
+import Image from "next/image";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { IProperty } from "@/types/property";
+
+
+
+interface Props {
+    properties: IProperty[];
+}
+
+export default function PropertyTable({
+    properties,
+}: Props) {
+    return (
+        <div className="overflow-hidden border py-4 px-6">
+            <Table>
+
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Property</TableHead>
+                        <TableHead>City</TableHead>
+                        <TableHead>Rent</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead className="text-right">
+                            Actions
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+
+                <TableBody>
+
+                    {properties.map((property) => (
+                        <TableRow key={property.id}>
+
+                            {/* Property */}
+
+                            <TableCell>
+                                <div className="flex items-center gap-4">
+
+                                    <Image
+                                        src={property.images[0]}
+                                        alt={property.title}
+                                        width={64}
+                                        height={64}
+                                        className=" object-cover"
+                                    />
+
+                                    <div>
+                                        <h4 className="font-semibold">
+                                            {property.title}
+                                        </h4>
+
+                                        <p className="text-sm text-muted-foreground">
+                                            {property.city}
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </TableCell>
+
+                            {/* City */}
+
+                            <TableCell>
+                                {property.city}
+                            </TableCell>
+
+                            {/* Rent */}
+
+                            <TableCell>
+                                ৳{property.rentAmount.toLocaleString()}
+                            </TableCell>
+
+                            {/* Status */}
+
+                            <TableCell>
+
+                                <Badge
+                                    variant={
+                                        property.availability === "AVAILABLE"
+                                            ? "default"
+                                            : "secondary"
+                                    }
+                                >
+                                    {property.availability}
+                                </Badge>
+
+                            </TableCell>
+
+                            {/* Date */}
+
+                            <TableCell>
+                                {new Date(property.createdAt).toLocaleDateString()}
+                            </TableCell>
+
+                            {/* Actions */}
+
+                            <TableCell className="text-right">
+
+                                <div className="flex justify-end gap-2">
+
+                                    <Button
+                                        asChild
+                                        size="icon"
+                                        variant="outline"
+                                    >
+                                        <Link href={`/properties/${property.id}`}>
+                                            <Eye className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+
+                                    <Button
+                                        asChild
+                                        size="icon"
+                                        variant="outline"
+                                    >
+                                        <Link
+                                            href={`/dashboard/landlord/properties/${property.id}/edit`}
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+
+                                    <Button
+                                        size="icon"
+                                        variant="destructive"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+
+                                </div>
+
+                            </TableCell>
+
+                        </TableRow>
+                    ))}
+
+                </TableBody>
+
+            </Table>
+        </div>
+    );
+}

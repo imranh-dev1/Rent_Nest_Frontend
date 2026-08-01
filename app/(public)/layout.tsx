@@ -1,3 +1,4 @@
+import Footer from "@/components/footer";
 import Navbar from "@/components/shared/Navbar";
 import { getCurrentUser } from "@/services/auth.service";
 
@@ -8,6 +9,7 @@ export default async function MainLayout({ children, }: { children: React.ReactN
         <>
             <Navbar user={user} />
             <main>{children}</main>
+            <Footer />
         </>
     );
 }
