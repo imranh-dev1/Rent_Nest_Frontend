@@ -3,7 +3,6 @@
 import React, { useCallback, useRef, useState, useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { toast } from "sonner";
 import { Building2, MapPin, DollarSign, CircleCheckBig, ImageIcon, Upload, X, LogIn } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -13,7 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { propertySchema } from "@/validations/properties.validation";
 
 import {
     Attachment,
@@ -24,11 +22,15 @@ import {
     AttachmentDescription,
     AttachmentActions,
     AttachmentAction,
-    AttachmentTrigger,
 } from "@/components/ui/attachment";
 import Image from "next/image";
+import { uploadImages } from "@/lib/uploadImage";
+import {
+    propertySchema,
+    PropertyFormValues,
+    CreatePropertyPayload,
+} from "@/validations/properties.validation";
 
-export type PropertyFormValues = z.infer<typeof propertySchema>;
 
 const AVAILABLE_AMENITIES = [
     { id: "wifi", label: "Free Wi-Fi" },
@@ -40,20 +42,34 @@ const AVAILABLE_AMENITIES = [
 ];
 
 interface CreatePropertyFormProps {
-    onSubmitAction: (data: PropertyFormValues) => Promise<{ success: boolean; message: string }>;
+    categories: Category[];
+    onSubmitAction: (
+        data: CreatePropertyPayload
+    ) => Promise<{
+        success: boolean;
+        message: string;
+    }>;
 }
 
-// Image upload helper types
 interface ImageFile extends File {
     preview?: string;
     id?: string;
 }
 
-export function CreatePropertyForm({ onSubmitAction }: CreatePropertyFormProps) {
+interface Category {
+    id: string;
+    name: string;
+}
+
+export function CreatePropertyForm({
+    categories,
+    onSubmitAction,
+}: CreatePropertyFormProps) {
     const [isPending, startTransition] = useTransition();
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
 
     const {
         register,
@@ -78,101 +94,156 @@ export function CreatePropertyForm({ onSubmitAction }: CreatePropertyFormProps) 
             amenities: [],
             images: [],
         },
+
     });
 
-    const images = watch("images") as ImageFile[] || [];
+
+
+    const images = watch("images") || [];
+
+    const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
 
     // Handle file selection
-    const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || []);
-        if (files.length === 0) return;
+    const handleFileSelect = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const files = Array.from(e.target.files || []);
 
-        const validFiles = files.filter(file => {
-            const isValidType = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type);
-            const isValidSize = file.size <= 5 * 1024 * 1024;
-            if (!isValidType) {
-                toast.error(`${file.name} is not a valid image format`);
-                return false;
+            if (!files.length) return;
+
+            const validFiles = files.filter((file) => {
+                const isValidType = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp",
+                    "image/gif",
+                ].includes(file.type);
+
+                const isValidSize = file.size <= 5 * 1024 * 1024;
+
+                if (!isValidType) {
+                    toast.error(`${file.name} is not a valid image.`);
+                    return false;
+                }
+
+                if (!isValidSize) {
+                    toast.error(`${file.name} exceeds 5MB.`);
+                    return false;
+                }
+
+                return true;
+            });
+
+            if (!validFiles.length) return;
+
+            if (imageFiles.length + validFiles.length > 5) {
+                toast.error("Maximum 5 images allowed");
+                return;
             }
-            if (!isValidSize) {
-                toast.error(`${file.name} exceeds 5MB limit`);
-                return false;
+
+            const previews: ImageFile[] = validFiles.map((file) => {
+                const image = file as ImageFile;
+
+                image.preview = URL.createObjectURL(file);
+
+                image.id = crypto.randomUUID();
+
+                return image;
+            });
+
+            setImageFiles((prev) => [...prev, ...previews]);
+
+            setValue("images", []);
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
             }
-            return true;
-        });
-
-        if (validFiles.length === 0) return;
-
-        if (images.length + validFiles.length > 5) {
-            toast.error("Maximum 5 images allowed");
-            return;
-        }
-
-        const imageFiles = validFiles.map(file => {
-            const imageFile = file as ImageFile;
-            imageFile.preview = URL.createObjectURL(file);
-            imageFile.id = `${Date.now()}-${Math.random()}`;
-            return imageFile;
-        });
-
-        setValue("images", [...images, ...imageFiles]);
-
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    }, [images, setValue]);
+        },
+        [[images, imageFiles.length, setValue]]
+    );
 
     // Remove image
-    const removeImage = useCallback((index: number) => {
-        const updatedImages = [...images];
-        const removed = updatedImages.splice(index, 1)[0];
+    const removeImage = useCallback(
+        (index: number) => {
+            const files = [...imageFiles];
 
-        if (removed.preview) {
-            URL.revokeObjectURL(removed.preview);
-        }
+            const removed = files[index];
 
-        setValue("images", updatedImages);
-    }, [images, setValue]);
-
-    const simulateUpload = (files: File[]) => {
-        setIsUploading(true);
-        setUploadProgress(0);
-
-        let progress = 0;
-        const interval = setInterval(() => {
-            progress += Math.random() * 10;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                setIsUploading(false);
-                toast.success(`${files.length} image(s) uploaded successfully`);
+            if (removed?.preview) {
+                URL.revokeObjectURL(removed.preview);
             }
-            setUploadProgress(Math.min(progress, 100));
-        }, 200);
-    };
+
+            files.splice(index, 1);
+
+            setImageFiles([...files]);
+
+            const updatedFormFiles = images.filter((_, i) => i !== index);
+
+            setValue("images", updatedFormFiles);
+        },
+        [imageFiles, images, setValue]
+    );
+
 
     const onSubmit = handleSubmit((data) => {
-        if (data.images.length === 0) {
+        if (imageFiles.length === 0) {
             toast.error("Please upload at least one image");
             return;
         }
 
         startTransition(async () => {
             try {
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                setIsUploading(true);
+                setUploadProgress(20);
 
-                const response = await onSubmitAction(data);
+                // Upload images to Cloudinary
+                const uploadedImages = await uploadImages(imageFiles);
+
+                console.log(uploadedImages);
+
+                setUploadProgress(80);
+
+                const imageUrls = uploadedImages.map(
+                    (image) => image.secure_url
+                );
+
+                const payload: CreatePropertyPayload = {
+                    title: data.title,
+                    description: data.description,
+                    address: data.address,
+                    city: data.city,
+                    rentAmount: Number(data.rentAmount),
+                    bedrooms: Number(data.bedrooms),
+                    bathrooms: Number(data.bathrooms),
+                    area: Number(data.area),
+                    amenities: data.amenities,
+                    images: imageUrls,
+                    categoryId: data.categoryId,
+                };
+                const response = await onSubmitAction(payload);
+
+                setUploadProgress(100);
+
                 if (response.success) {
                     toast.success(response.message);
+
                     reset();
-                    images.forEach(img => {
-                        if (img.preview) URL.revokeObjectURL(img.preview);
+                    setImageFiles([]);
+                    setValue("images", imageUrls);
+
+                    images.forEach((img) => {
+                        const preview = (img as any).preview;
+                        if (preview) {
+                            URL.revokeObjectURL(preview);
+                        }
                     });
                 } else {
                     toast.error(response.message);
                 }
             } catch (error) {
                 toast.error("Failed to upload images");
+            } finally {
+                setIsUploading(false);
+                setUploadProgress(0);
             }
         });
     });
@@ -239,14 +310,23 @@ export function CreatePropertyForm({ onSubmitAction }: CreatePropertyFormProps) 
                                 control={control}
                                 name="categoryId"
                                 render={({ field }) => (
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <SelectTrigger className="w-full">
+                                    <Select
+                                        value={field.value}
+                                        onValueChange={field.onChange}
+                                    >
+                                        <SelectTrigger>
                                             <SelectValue placeholder="Select Category" />
                                         </SelectTrigger>
+
                                         <SelectContent>
-                                            <SelectItem value="apartment">Apartment</SelectItem>
-                                            <SelectItem value="house">Standalone House</SelectItem>
-                                            <SelectItem value="office">Commercial Office</SelectItem>
+                                            {categories.map((category) => (
+                                                <SelectItem
+                                                    key={category.id}
+                                                    value={category.id}
+                                                >
+                                                    {category.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 )}
@@ -399,7 +479,7 @@ export function CreatePropertyForm({ onSubmitAction }: CreatePropertyFormProps) 
                                 multiple
                                 className="absolute inset-0 opacity-0 cursor-pointer"
                                 onChange={handleFileSelect}
-                                disabled={images.length >= 5 || isPending}
+                                disabled={imageFiles.length >= 5 || isPending}
                             />
 
                             <div className="flex flex-col items-center gap-2 text-center">
@@ -408,12 +488,12 @@ export function CreatePropertyForm({ onSubmitAction }: CreatePropertyFormProps) 
                                 </div>
                                 <div className="space-y-1">
                                     <p className="font-medium">
-                                        {images.length === 0 ? "Drop your images here" : "Add more images"}
+                                        {imageFiles.length === 0 ? "Drop your images here" : "Add more images"}
                                     </p>
                                     <p className="text-sm text-muted-foreground">
-                                        {images.length === 0
+                                        {imageFiles.length === 0
                                             ? "or click to browse (JPG, PNG, WebP up to 5MB)"
-                                            : `${images.length}/5 images uploaded`
+                                            : `${imageFiles.length}/5 images uploaded`
                                         }
                                     </p>
                                 </div>
@@ -436,9 +516,9 @@ export function CreatePropertyForm({ onSubmitAction }: CreatePropertyFormProps) 
                     </Field>
 
                     {/* Image Gallery */}
-                    {images.length > 0 && (
+                    {imageFiles.length > 0 && (
                         <AttachmentGroup className="gap-2">
-                            {images.map((file, index) => (
+                            {imageFiles.map((file, index) => (
                                 <Attachment
                                     key={file.id || index}
                                     state={isUploading ? "uploading" : "done"}
