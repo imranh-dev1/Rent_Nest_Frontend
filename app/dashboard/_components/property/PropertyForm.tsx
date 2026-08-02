@@ -1,35 +1,11 @@
 "use client";
 
-import React, {
-    useCallback,
-    useRef,
-    useState,
-    useTransition,
-} from "react";
-
-import {
-    useForm,
-    Controller
-} from "react-hook-form";
-
-import {
-    zodResolver
-} from "@hookform/resolvers/zod";
-
-import {
-    toast
-} from "sonner";
-
-import {
-    uploadImages
-} from "@/lib/uploadImage";
-
-
-import {
-    propertySchema,
-    PropertyFormValues,
-    CreatePropertyPayload,
-} from "@/validations/properties.validation";
+import { useCallback, useEffect, useRef, useState, useTransition, } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { uploadImages } from "@/lib/uploadImage";
+import { propertySchema, PropertyFormValues, CreatePropertyPayload } from "@/validations/properties.validation";
 import { Button } from "@/components/ui/button";
 import { Building2, CircleCheckBig, DollarSign, ImageIcon, LogIn, MapPin, Upload, X } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 
 const AVAILABLE_AMENITIES = [
@@ -58,9 +36,12 @@ interface Category {
 }
 
 
-interface ImageFile extends File {
-    preview?: string;
-    id?: string;
+interface PropertyImage {
+    id: string;
+    url: string;
+    file?: File;
+    name: string;
+    size: number;
 }
 
 
@@ -84,42 +65,19 @@ interface PropertyFormProps {
 
 }
 
-
-
-export default function PropertyForm({
-
-    mode,
-    categories,
-
-    defaultValues,
-
-    onSubmitAction
-
-}: PropertyFormProps) {
-
-
+export default function PropertyForm({ mode, categories, defaultValues, onSubmitAction }: PropertyFormProps) {
     const [isPending, startTransition] = useTransition();
 
     const [isUploading, setIsUploading] = useState(false);
 
     const [uploadProgress, setUploadProgress] = useState(0);
 
-
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const router = useRouter();
 
 
-    const {
-        register,
-        handleSubmit,
-        control,
-        reset,
-        setValue,
-        formState: {
-            errors
-        }
-
-    } = useForm<PropertyFormValues>({
+    const { register, handleSubmit, control, reset, setValue, formState: { errors } } = useForm<PropertyFormValues>({
 
         resolver: zodResolver(propertySchema) as any,
 
@@ -141,144 +99,95 @@ export default function PropertyForm({
 
     });
 
+    const [images, setImages] = useState<PropertyImage[]>([]);
 
+    const imageFiles = images.filter((image) => image.file).map((image) => image.file!);
 
-    const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
-
-
+    useEffect(() => {
+        if (
+            mode === "update" &&
+            defaultValues?.images?.length
+        ) {
+            setImages(
+                defaultValues.images.map((url, index) => ({
+                    id: `existing-${index}`,
+                    url,
+                    name: `Image ${index + 1}`,
+                    size: 0,
+                }))
+            );
+        }
+    }, [mode, defaultValues]);
 
     const handleFileSelect = useCallback(
-
         (e: React.ChangeEvent<HTMLInputElement>) => {
 
-
-            const files = Array.from(
-                e.target.files || []
-            );
-
+            const files = Array.from(e.target.files || []);
 
             if (!files.length) return;
 
+            const validFiles = files.filter((file) => {
 
+                const validType = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp",
+                    "image/gif",
+                ].includes(file.type);
 
-            const validFiles = files.filter(
-                (file) => {
+                const validSize = file.size <= 5 * 1024 * 1024;
 
+                if (!validType) {
+                    toast.error(`${file.name} is not a valid image`);
+                    return false;
+                }
 
-                    const validType = [
-                        "image/jpeg",
-                        "image/png",
-                        "image/webp",
-                        "image/gif"
-                    ].includes(file.type);
+                if (!validSize) {
+                    toast.error(`${file.name} exceeds 5MB`);
+                    return false;
+                }
 
-
-                    const validSize =
-                        file.size <= 5 * 1024 * 1024;
-
-
-
-                    if (!validType) {
-
-                        toast.error(
-                            `${file.name} invalid image`
-                        );
-
-                        return false;
-
-                    }
-
-
-
-                    if (!validSize) {
-
-                        toast.error(
-                            `${file.name} exceeds 5MB`
-                        );
-
-                        return false;
-
-                    }
-
-
-                    return true;
-
-
-                });
-
+                return true;
+            });
 
             if (!validFiles.length) return;
 
-
-
-            const previews = validFiles.map(
-                (file) => {
-
-                    const image = file as ImageFile;
-
-
-                    image.preview =
-                        URL.createObjectURL(file);
-
-
-                    image.id =
-                        crypto.randomUUID();
-
-
-                    return image;
-
-                });
-
-
-            setImageFiles(
-                prev => [
-                    ...prev,
-                    ...previews
-                ]
-            );
-
-
-            if (fileInputRef.current) {
-
-                fileInputRef.current.value = "";
-
+            if (images.length + validFiles.length > 5) {
+                toast.error("Maximum 5 images allowed");
+                return;
             }
 
+            const newImages = validFiles.map((file) => ({
+                id: crypto.randomUUID(),
+                file,
+                url: URL.createObjectURL(file),
+                name: file.name,
+                size: file.size,
+            }));
 
+            setImages((prev) => [...prev, ...newImages]);
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
 
         },
-
-        []);
+        [images]
+    );
 
 
 
     const removeImage = (index: number) => {
 
+        const image = images[index];
 
-        const updated = [
-            ...imageFiles
-        ];
-
-
-        const removed =
-            updated[index];
-
-
-        if (removed.preview) {
-
-            URL.revokeObjectURL(
-                removed.preview
-            );
-
+        if (image.file) {
+            URL.revokeObjectURL(image.url);
         }
 
-
-        updated.splice(index, 1);
-
-
-        setImageFiles(updated);
-
-
+        setImages((prev) =>
+            prev.filter((_, i) => i !== index)
+        );
     };
 
 
@@ -287,38 +196,33 @@ export default function PropertyForm({
         handleSubmit((data) => {
 
 
-            if (imageFiles.length === 0) {
+            if (images.length === 0) {
 
                 toast.error(
                     "Please upload at least one image"
                 );
-
                 return;
 
             }
 
-
-
             startTransition(async () => {
-
-
                 try {
-
 
                     setIsUploading(true);
 
-
                     const uploaded =
-                        await uploadImages(
-                            imageFiles
-                        );
+                        imageFiles.length > 0
+                            ? await uploadImages(imageFiles)
+                            : [];
 
+                    const existingImageUrls = images
+                        .filter((image) => !image.file)
+                        .map((image) => image.url);
 
-
-                    const imageUrls =
-                        uploaded.map(
-                            (img) => img.secure_url
-                        );
+                    const imageUrls = [
+                        ...existingImageUrls,
+                        ...uploaded.map((img) => img.secure_url),
+                    ];
 
 
 
@@ -366,14 +270,12 @@ export default function PropertyForm({
                             response.message
                         );
 
-
                         if (mode === "create") {
-
                             reset();
-
-                            setImageFiles([]);
+                            setImages([]);
 
                         }
+                        router.push("/dashboard/landlord/properties");
 
 
                     } else {
@@ -560,42 +462,62 @@ export default function PropertyForm({
                             </div>
                             <div>
                                 <CardTitle>Amenities & Features</CardTitle>
-                                <CardDescription>Select all structural or additional features your space provides.</CardDescription>
+                                <CardDescription>
+                                    Select all structural or additional features your space provides.
+                                </CardDescription>
                             </div>
                         </div>
                     </CardHeader>
+
                     <CardContent>
-                        <Controller
-                            control={control}
-                            name="amenities"
-                            render={({ field }) => (
-                                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                                    {AVAILABLE_AMENITIES.map((amenity) => {
-                                        const isChecked = field.value?.includes(amenity.id);
-                                        return (
-                                            <label
-                                                key={amenity.id}
-                                                className={`flex items-center space-x-3 border px-4 py-2 transition-all cursor-pointer ${isChecked ? "border-primary bg-primary/5" : "border-muted"
-                                                    }`}
-                                            >
-                                                <Checkbox
-                                                    id={amenity.id}
-                                                    checked={isChecked}
-                                                    onCheckedChange={(checked) => {
-                                                        if (checked) {
-                                                            field.onChange([...(field.value || []), amenity.id]);
-                                                        } else {
-                                                            field.onChange((field.value || []).filter((id) => id !== amenity.id));
-                                                        }
-                                                    }}
-                                                />
-                                                <span className="text-sm">{amenity.label}</span>
-                                            </label>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        />
+                        <Field>
+                            <Controller
+                                control={control}
+                                name="amenities"
+                                render={({ field }) => (
+                                    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                                        {AVAILABLE_AMENITIES.map((amenity) => {
+                                            const isChecked = field.value?.includes(amenity.id);
+
+                                            return (
+                                                <label
+                                                    key={amenity.id}
+                                                    className={`flex items-center space-x-3 border px-4 py-2 cursor-pointer transition-all ${isChecked
+                                                        ? "border-primary bg-primary/5"
+                                                        : "border-muted"
+                                                        }`}
+                                                >
+                                                    <Checkbox
+                                                        id={amenity.id}
+                                                        checked={isChecked}
+                                                        onCheckedChange={(checked) => {
+                                                            if (checked) {
+                                                                field.onChange([
+                                                                    ...(field.value || []),
+                                                                    amenity.id,
+                                                                ]);
+                                                            } else {
+                                                                field.onChange(
+                                                                    (field.value || []).filter(
+                                                                        (id) => id !== amenity.id
+                                                                    )
+                                                                );
+                                                            }
+                                                        }}
+                                                    />
+
+                                                    <span className="text-sm">
+                                                        {amenity.label}
+                                                    </span>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            />
+
+                            <FieldError>{errors.amenities?.message}</FieldError>
+                        </Field>
                     </CardContent>
                 </Card>
             </div>
@@ -679,31 +601,33 @@ export default function PropertyForm({
                     </Field>
 
                     {/* Image Gallery */}
-                    {imageFiles.length > 0 && (
+                    {images.length > 0 && (
                         <AttachmentGroup className="gap-2">
-                            {imageFiles.map((file, index) => (
+                            {images.map((image, index) => (
                                 <Attachment
-                                    key={file.id || index}
+                                    key={image.id || index}
                                     state={isUploading ? "uploading" : "done"}
                                     className="relative"
                                 >
                                     <AttachmentMedia variant="image">
-                                        {file.preview ? (
+                                        {image.url ? (
                                             <Image
-                                                src={file.preview}
+                                                src={image.url}
                                                 alt={`Property image ${index + 1}`}
                                                 fill
                                                 className="object-cover"
-                                                unoptimized={!file.preview.startsWith('http')}
+                                                unoptimized={image.url.startsWith("blob:")}
                                             />
                                         ) : (
                                             <ImageIcon className="size-6" />
                                         )}
                                     </AttachmentMedia>
                                     <AttachmentContent>
-                                        <AttachmentTitle>{file.name}</AttachmentTitle>
+                                        <AttachmentTitle>{image.name}</AttachmentTitle>
                                         <AttachmentDescription>
-                                            {(file.size / 1024 / 1024).toFixed(2)} MB
+                                            {image.size > 0
+                                                ? `${(image.size / 1024 / 1024).toFixed(2)} MB`
+                                                : "Uploaded image"}
                                         </AttachmentDescription>
                                     </AttachmentContent>
                                     <AttachmentActions>

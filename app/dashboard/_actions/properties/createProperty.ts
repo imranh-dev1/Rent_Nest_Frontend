@@ -1,25 +1,25 @@
 'use server';
 
-import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers"; 
 
 export const handleCreateProperty = async (data: any) => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
 
-    // console.log("Payload =>", JSON.stringify(data, null, 2));
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/properties`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify(data),
-        }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/properties`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+    });
+    const result = await response.json();
 
-    console.log("Status:", response.status);
+    if (result.success) {
+        revalidateTag("properties", "max"); 
+    }
 
-    return await response.json();
-    console.log("Response:", data);
+    return result;
 };
