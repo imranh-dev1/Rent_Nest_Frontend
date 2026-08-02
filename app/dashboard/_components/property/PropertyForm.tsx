@@ -1,35 +1,45 @@
 "use client";
 
-import React, { useCallback, useRef, useState, useTransition } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { Building2, MapPin, DollarSign, CircleCheckBig, ImageIcon, Upload, X, LogIn } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
+import React, {
+    useCallback,
+    useRef,
+    useState,
+    useTransition,
+} from "react";
 
 import {
-    Attachment,
-    AttachmentGroup,
-    AttachmentMedia,
-    AttachmentContent,
-    AttachmentTitle,
-    AttachmentDescription,
-    AttachmentActions,
-    AttachmentAction,
-} from "@/components/ui/attachment";
-import Image from "next/image";
-import { uploadImages } from "@/lib/uploadImage";
+    useForm,
+    Controller
+} from "react-hook-form";
+
+import {
+    zodResolver
+} from "@hookform/resolvers/zod";
+
+import {
+    toast
+} from "sonner";
+
+import {
+    uploadImages
+} from "@/lib/uploadImage";
+
+
 import {
     propertySchema,
     PropertyFormValues,
     CreatePropertyPayload,
 } from "@/validations/properties.validation";
+import { Button } from "@/components/ui/button";
+import { Building2, CircleCheckBig, DollarSign, ImageIcon, LogIn, MapPin, Upload, X } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentTitle } from "@/components/ui/attachment";
+import Image from "next/image";
 
 
 const AVAILABLE_AMENITIES = [
@@ -41,34 +51,62 @@ const AVAILABLE_AMENITIES = [
     { id: "lift", label: "Elevator/Lift" },
 ];
 
-interface CreatePropertyFormProps {
-    categories: Category[];
-    onSubmitAction: (
-        data: CreatePropertyPayload
-    ) => Promise<{
-        success: boolean;
-        message: string;
-    }>;
-}
-
-interface ImageFile extends File {
-    preview?: string;
-    id?: string;
-}
 
 interface Category {
     id: string;
     name: string;
 }
 
-export function CreatePropertyForm({
+
+interface ImageFile extends File {
+    preview?: string;
+    id?: string;
+}
+
+
+
+interface PropertyFormProps {
+
+    mode: "create" | "update";
+
+    categories: Category[];
+
+    propertyId?: string;
+
+    defaultValues?: Partial<PropertyFormValues>;
+
+    onSubmitAction: (
+        data: CreatePropertyPayload
+    ) => Promise<{
+        success: boolean;
+        message: string;
+    }>;
+
+}
+
+
+
+export default function PropertyForm({
+
+    mode,
     categories,
-    onSubmitAction,
-}: CreatePropertyFormProps) {
+
+    defaultValues,
+
+    onSubmitAction
+
+}: PropertyFormProps) {
+
+
     const [isPending, startTransition] = useTransition();
+
     const [isUploading, setIsUploading] = useState(false);
+
     const [uploadProgress, setUploadProgress] = useState(0);
+
+
     const fileInputRef = useRef<HTMLInputElement>(null);
+
 
 
     const {
@@ -77,10 +115,14 @@ export function CreatePropertyForm({
         control,
         reset,
         setValue,
-        watch,
-        formState: { errors },
+        formState: {
+            errors
+        }
+
     } = useForm<PropertyFormValues>({
+
         resolver: zodResolver(propertySchema) as any,
+
         defaultValues: {
             title: "",
             description: "",
@@ -93,163 +135,284 @@ export function CreatePropertyForm({
             area: 0,
             amenities: [],
             images: [],
-        },
+
+            ...defaultValues
+        }
 
     });
 
 
-
-    const images = watch("images") || [];
 
     const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
 
-    // Handle file selection
+
+
     const handleFileSelect = useCallback(
+
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            const files = Array.from(e.target.files || []);
+
+
+            const files = Array.from(
+                e.target.files || []
+            );
+
 
             if (!files.length) return;
 
-            const validFiles = files.filter((file) => {
-                const isValidType = [
-                    "image/jpeg",
-                    "image/png",
-                    "image/webp",
-                    "image/gif",
-                ].includes(file.type);
 
-                const isValidSize = file.size <= 5 * 1024 * 1024;
 
-                if (!isValidType) {
-                    toast.error(`${file.name} is not a valid image.`);
-                    return false;
-                }
+            const validFiles = files.filter(
+                (file) => {
 
-                if (!isValidSize) {
-                    toast.error(`${file.name} exceeds 5MB.`);
-                    return false;
-                }
 
-                return true;
-            });
+                    const validType = [
+                        "image/jpeg",
+                        "image/png",
+                        "image/webp",
+                        "image/gif"
+                    ].includes(file.type);
+
+
+                    const validSize =
+                        file.size <= 5 * 1024 * 1024;
+
+
+
+                    if (!validType) {
+
+                        toast.error(
+                            `${file.name} invalid image`
+                        );
+
+                        return false;
+
+                    }
+
+
+
+                    if (!validSize) {
+
+                        toast.error(
+                            `${file.name} exceeds 5MB`
+                        );
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+
+                });
+
 
             if (!validFiles.length) return;
 
-            if (imageFiles.length + validFiles.length > 5) {
-                toast.error("Maximum 5 images allowed");
-                return;
-            }
 
-            const previews: ImageFile[] = validFiles.map((file) => {
-                const image = file as ImageFile;
 
-                image.preview = URL.createObjectURL(file);
+            const previews = validFiles.map(
+                (file) => {
 
-                image.id = crypto.randomUUID();
+                    const image = file as ImageFile;
 
-                return image;
-            });
 
-            setImageFiles((prev) => [...prev, ...previews]);
+                    image.preview =
+                        URL.createObjectURL(file);
 
-            setValue("images", []);
+
+                    image.id =
+                        crypto.randomUUID();
+
+
+                    return image;
+
+                });
+
+
+            setImageFiles(
+                prev => [
+                    ...prev,
+                    ...previews
+                ]
+            );
+
 
             if (fileInputRef.current) {
+
                 fileInputRef.current.value = "";
-            }
-        },
-        [[images, imageFiles.length, setValue]]
-    );
 
-    // Remove image
-    const removeImage = useCallback(
-        (index: number) => {
-            const files = [...imageFiles];
-
-            const removed = files[index];
-
-            if (removed?.preview) {
-                URL.revokeObjectURL(removed.preview);
             }
 
-            files.splice(index, 1);
 
-            setImageFiles([...files]);
 
-            const updatedFormFiles = images.filter((_, i) => i !== index);
-
-            setValue("images", updatedFormFiles);
         },
-        [imageFiles, images, setValue]
-    );
+
+        []);
 
 
-    const onSubmit = handleSubmit((data) => {
-        if (imageFiles.length === 0) {
-            toast.error("Please upload at least one image");
-            return;
+
+    const removeImage = (index: number) => {
+
+
+        const updated = [
+            ...imageFiles
+        ];
+
+
+        const removed =
+            updated[index];
+
+
+        if (removed.preview) {
+
+            URL.revokeObjectURL(
+                removed.preview
+            );
+
         }
 
-        startTransition(async () => {
-            try {
-                setIsUploading(true);
-                setUploadProgress(20);
 
-                // Upload images to Cloudinary
-                const uploadedImages = await uploadImages(imageFiles);
+        updated.splice(index, 1);
 
-                console.log(uploadedImages);
 
-                setUploadProgress(80);
+        setImageFiles(updated);
 
-                const imageUrls = uploadedImages.map(
-                    (image) => image.secure_url
+
+    };
+
+
+
+    const submitHandler =
+        handleSubmit((data) => {
+
+
+            if (imageFiles.length === 0) {
+
+                toast.error(
+                    "Please upload at least one image"
                 );
 
-                const payload: CreatePropertyPayload = {
-                    title: data.title,
-                    description: data.description,
-                    address: data.address,
-                    city: data.city,
-                    rentAmount: Number(data.rentAmount),
-                    bedrooms: Number(data.bedrooms),
-                    bathrooms: Number(data.bathrooms),
-                    area: Number(data.area),
-                    amenities: data.amenities,
-                    images: imageUrls,
-                    categoryId: data.categoryId,
-                };
-                const response = await onSubmitAction(payload);
+                return;
 
-                setUploadProgress(100);
-
-                if (response.success) {
-                    toast.success(response.message);
-
-                    reset();
-                    setImageFiles([]);
-                    setValue("images", imageUrls);
-
-                    images.forEach((img) => {
-                        const preview = (img as any).preview;
-                        if (preview) {
-                            URL.revokeObjectURL(preview);
-                        }
-                    });
-                } else {
-                    toast.error(response.message);
-                }
-            } catch (error) {
-                toast.error("Failed to upload images");
-            } finally {
-                setIsUploading(false);
-                setUploadProgress(0);
             }
+
+
+
+            startTransition(async () => {
+
+
+                try {
+
+
+                    setIsUploading(true);
+
+
+                    const uploaded =
+                        await uploadImages(
+                            imageFiles
+                        );
+
+
+
+                    const imageUrls =
+                        uploaded.map(
+                            (img) => img.secure_url
+                        );
+
+
+
+                    const payload: CreatePropertyPayload = {
+
+                        title: data.title,
+
+                        description: data.description,
+
+                        address: data.address,
+
+                        city: data.city,
+
+                        categoryId: data.categoryId,
+
+
+                        rentAmount: Number(data.rentAmount),
+
+                        bedrooms: Number(data.bedrooms),
+
+                        bathrooms: Number(data.bathrooms),
+
+                        area: Number(data.area),
+
+
+                        amenities: data.amenities,
+
+
+                        images: imageUrls
+
+                    };
+
+
+
+                    const response =
+                        await onSubmitAction(
+                            payload
+                        );
+
+
+
+                    if (response.success) {
+
+                        toast.success(
+                            response.message
+                        );
+
+
+                        if (mode === "create") {
+
+                            reset();
+
+                            setImageFiles([]);
+
+                        }
+
+
+                    } else {
+
+                        toast.error(
+                            response.message
+                        );
+
+                    }
+
+
+
+                } catch (error) {
+
+                    toast.error(
+                        "Something went wrong"
+                    );
+
+
+                } finally {
+
+
+                    setIsUploading(false);
+
+                }
+
+
+
+            });
+
+
         });
-    });
+
+
 
     return (
-        <form onSubmit={onSubmit} className="space-y-8">
+
+        <form onSubmit={submitHandler} className="space-y-8">
+
             <div className="flex gap-6">
                 <Card className="shadow-xs flex-1">
                     <CardHeader>
@@ -560,12 +723,27 @@ export function CreatePropertyForm({
                     )}
                 </CardContent>
             </Card>
+
+
             <div className="flex justify-center">
                 <Button type="submit" disabled={isPending}>
                     <LogIn className="mr-2 h-4 w-4" />
-                    {isPending ? "Creating Property..." : "Submit Property Listing"}
+                    {isPending
+                        ? "Saving..."
+                        : mode === "create"
+                            ? "Create Property"
+                            : "Update Property"
+                    }
                 </Button>
             </div>
+
+
+
+
         </form>
+
+
     );
-} 
+
+
+}

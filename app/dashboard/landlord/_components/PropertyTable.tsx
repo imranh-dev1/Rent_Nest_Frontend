@@ -51,13 +51,14 @@ export default function PropertyTable({
                             <TableCell>
                                 <div className="flex items-center gap-4">
 
-                                    <Image
-                                        src={property.images[0]}
-                                        alt={property.title}
-                                        width={64}
-                                        height={64}
-                                        className=" object-cover"
-                                    />
+                                    <div className="relative h-16 w-16 overflow-hidden ">
+                                        <Image
+                                            src={property.images[0]}
+                                            alt={property.title}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
 
                                     <div>
                                         <h4 className="font-semibold">

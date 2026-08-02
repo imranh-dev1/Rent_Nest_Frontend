@@ -6,7 +6,7 @@ export const handleCreateProperty = async (data: any) => {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
 
-    console.log("Payload =>", JSON.stringify(data, null, 2));
+    // console.log("Payload =>", JSON.stringify(data, null, 2));
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/properties`,
         {
             method: "POST",
