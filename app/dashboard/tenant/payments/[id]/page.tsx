@@ -30,6 +30,7 @@ export default async function PaymentDetailsPage({
     const { id } = await params;
 
     const { data: payment } = await getPaymentById(id);
+    console.log(payment)
 
     return (
         <div className="space-y-6">
@@ -52,8 +53,8 @@ export default async function PaymentDetailsPage({
                 <CardContent className="space-y-8">
 
                     <Image
-                        src={payment.property.image}
-                        alt={payment.property.title}
+                        src={payment?.rentalRequest.property.images[0]}
+                        alt={payment.rentalRequest.property.title}
                         width={1200}
                         height={400}
                         className="h-72 w-full rounded-lg object-cover"
@@ -70,32 +71,13 @@ export default async function PaymentDetailsPage({
 
                                 <div className="flex items-center gap-2">
                                     <Home className="h-4 w-4" />
-                                    {payment.property.title}
+                                    {payment?.rentalRequest.property.title}
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <MapPin className="h-4 w-4" />
-                                    {payment.property.address}, {payment.property.city}
+                                    {payment?.rentalRequest.property.address}, {payment.rentalRequest.property.city}
                                 </div>
-
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Landlord</CardTitle>
-                            </CardHeader>
-
-                            <CardContent className="space-y-4">
-
-                                <div className="flex items-center gap-2">
-                                    <User className="h-4 w-4" />
-                                    {payment.landlord.name}
-                                </div>
-
-                                <p>{payment.landlord.email}</p>
-
-                                <p>{payment.landlord.phone}</p>
 
                             </CardContent>
                         </Card>
