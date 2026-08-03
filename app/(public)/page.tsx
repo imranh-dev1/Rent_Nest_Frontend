@@ -1,4 +1,3 @@
-import { PropertySearchParams } from "@/types/property";
 import { getProperties } from "./_actions/property/getProperties";
 import Banner from "./_components/home/Banner"
 import FeaturedProperties from "./_components/home/FeaturedProperties";
@@ -8,13 +7,7 @@ import WhyChooseRentNest from "./_components/home/WhyChooseRentNest";
 
 export default async function Page() {
 
-  const { data: properties } = await getProperties({
-    page: 1,
-    limit: 6,
-    availability: "AVAILABLE",
-    sortBy: "createdAt",
-    sortOrder: "desc",
-  });
+  const { data: properties } = await getProperties();
 
   return (
     <>

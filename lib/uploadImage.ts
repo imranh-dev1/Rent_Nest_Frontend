@@ -1,11 +1,11 @@
 export async function uploadImages(files: File[]) {
-    console.log("Files:", files);
+    // console.log("Files:", files);
 
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 
-    console.log("Cloud Name:", cloudName);
-    console.log("Upload Preset:", uploadPreset);
+    // console.log("Cloud Name:", cloudName);
+    // console.log("Upload Preset:", uploadPreset);
 
     const uploads = files.map(async (file) => {
         const formData = new FormData();
@@ -20,10 +20,10 @@ export async function uploadImages(files: File[]) {
             }
         );
 
-        console.log("Status:", response.status);
+        // console.log("Status:", response.status);
 
         const data = await response.json();
-        console.log("Cloudinary Response:", data);
+        // console.log("Cloudinary Response:", data);
 
         if (!response.ok) {
             throw new Error(data.error?.message || "Upload failed");

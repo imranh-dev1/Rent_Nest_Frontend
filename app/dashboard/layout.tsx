@@ -10,7 +10,7 @@ export default async function DashboardLayout({
     children: ReactNode;
 }) {
     const user = await getCurrentUser();
-    console.log(user)
+    // console.log(user)
 
     return (
         <div className="min-h-screen bg-muted/30">

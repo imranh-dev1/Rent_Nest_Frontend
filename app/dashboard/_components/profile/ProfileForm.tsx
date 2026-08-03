@@ -91,8 +91,8 @@ export default function ProfileForm({
 
     const submit = handleSubmit(
         async (data) => {
-            console.log("VALID DATA");
-            console.log(data);
+            // console.log("VALID DATA");
+            // console.log(data);
 
             startTransition(async () => {
                 try {
@@ -119,10 +119,6 @@ export default function ProfileForm({
                 }
             });
         },
-        (errors) => {
-            console.log("FORM ERRORS");
-            console.log(errors);
-        }
     );
 
     return (

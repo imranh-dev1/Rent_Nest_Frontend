@@ -22,7 +22,7 @@ const statusVariant: StatusVariant = {};
 export default async function DashboardLandlord() {
     const { data: properties } = await getMyProperties();
     const { data: rentalRequests } = await getLandlordRentalRequests();
-    console.log(rentalRequests);
+    // console.log(rentalRequests);
 
     return (
         <div className="space-y-8">

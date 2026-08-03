@@ -73,8 +73,13 @@ interface NavbarProps {
     user: IUser | null;
 }
 
+
+
 export default function Navbar({ user }: NavbarProps) {
-    console.log(user)
+    const dashboardPath = user ? `/dashboard/${user.role.toLowerCase()}` : "";
+    const profilePath = user ? `/dashboard/${user.role.toLowerCase()}/profile` : "";
+    const createPropertyPath = user ? `/dashboard/${user.role.toLowerCase()}/properties/create` : "";
+    // console.log(user)
     const pathname = usePathname();
     const router = useRouter();
 
@@ -194,24 +199,23 @@ export default function Navbar({ user }: NavbarProps) {
 
                                 <DropdownMenuSeparator />
 
-                                <DropdownMenuItem asChild>
-                                    <Link href="/dashboard/tenant">
+                                <DropdownMenuItem className="cursor-pointer" asChild>
+                                    <Link href={dashboardPath}>
                                         <LayoutDashboard className="mr-2 h-4 w-4" />
                                         Dashboard
                                     </Link>
                                 </DropdownMenuItem>
 
-                                <DropdownMenuItem asChild>
-                                    <Link href="/dashboard/tenant/profile">
+                                <DropdownMenuItem className="cursor-pointer" asChild>
+                                    <Link href={profilePath}>
                                         <User className="mr-2 h-4 w-4" />
                                         My Profile
                                     </Link>
                                 </DropdownMenuItem>
-
-                                <DropdownMenuItem asChild>
-                                    <Link href="/dashboard/tenant/settings">
-                                        <Settings className="mr-2 h-4 w-4" />
-                                        Settings
+                                <DropdownMenuItem className="cursor-pointer" asChild>
+                                    <Link href={createPropertyPath}>
+                                        <Home className="mr-2 h-4 w-4" />
+                                        Create Property
                                     </Link>
                                 </DropdownMenuItem>
 
@@ -239,7 +243,7 @@ export default function Navbar({ user }: NavbarProps) {
 
                         <Button className="cursor-pointer">
                             <Home className="mr-2 size-4" />
-                            List Property
+                            Rental Properties
                         </Button>
                     </Link>
                 </div>
@@ -284,7 +288,7 @@ export default function Navbar({ user }: NavbarProps) {
                             </Button>
 
                             <Button>
-                                List Property
+                                Rental Properties
                             </Button>
                         </nav>
                     </div>
