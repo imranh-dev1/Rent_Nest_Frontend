@@ -21,7 +21,7 @@ export default function DashboardSidebar({
 
 
     return (
-       <>
+        <>
             {/* Desktop Sidebar - Fixed */}
             <aside className="fixed top-0 left-0 z-40 hidden md:flex h-screen w-72 flex-col border-r bg-background shadow-lg">
                 {/* Logo */}

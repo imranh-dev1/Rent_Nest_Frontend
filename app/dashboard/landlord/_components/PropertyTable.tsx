@@ -1,10 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Loader2, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
+import { toast } from "sonner";
+import { handleDeleteProperty } from "@/app/dashboard/_actions/properties/deleteProperty";
 import {
     Table,
     TableBody,
@@ -14,16 +17,31 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { IProperty } from "@/types/property";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 
 interface Props {
     properties: IProperty[];
 }
 
-export default function PropertyTable({
-    properties,
-}: Props) {
+export default function PropertyTable({ properties, }: Props) {
+    const router = useRouter();
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const handleDelete = async (id: string) => {
+        setDeletingId(id);
+
+        const result = await handleDeleteProperty(id);
+
+        if (result.success) {
+            toast.success(result.message);
+            router.refresh();
+        } else {
+            toast.error(result.message);
+        }
+
+        setDeletingId(null);
+    };
     return (
         <div className="overflow-hidden border py-4 px-6">
             <Table>
@@ -139,8 +157,14 @@ export default function PropertyTable({
                                     <Button
                                         size="icon"
                                         variant="destructive"
+                                        disabled={deletingId === property.id}
+                                        onClick={() => handleDelete(property.id)}
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        {deletingId === property.id ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Trash2 className="h-4 w-4" />
+                                        )}
                                     </Button>
 
                                 </div>
