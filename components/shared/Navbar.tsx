@@ -74,6 +74,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ user }: NavbarProps) {
+    console.log(user)
     const pathname = usePathname();
     const router = useRouter();
 
@@ -153,7 +154,7 @@ export default function Navbar({ user }: NavbarProps) {
                                     className="h-10 w-10 rounded-full p-0 cursor-pointer">
                                     <Avatar className="h-10 w-10 border border-primary">
                                         <AvatarImage
-                                            src={user.profileImg ?? ""}
+                                            src={user.profileImg || ""}
                                             alt={user.name}
                                         />
                                         <AvatarFallback>

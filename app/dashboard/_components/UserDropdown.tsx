@@ -31,7 +31,7 @@ interface UserDropdownProps {
     name: string;
     email: string;
     role: "TENANT" | "LANDLORD" | "ADMIN";
-    image?: string | null;
+    profileImg?: string | null;
   };
 }
 
@@ -47,7 +47,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
       <DropdownMenuTrigger asChild>
         <button className="rounded-full outline-none ring-offset-background transition hover:opacity-90 focus:ring-2 focus:ring-primary">
           <Avatar className="h-10 w-10 cursor-pointer">
-            <AvatarImage src={user?.image ?? ""} />
+            <AvatarImage src={user?.profileImg ?? ""} />
 
             <AvatarFallback>
               {initials}
