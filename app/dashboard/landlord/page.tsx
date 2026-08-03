@@ -14,19 +14,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { getLandlordRentalRequests } from "@/services/getLandlordRentalRequets";
 
-interface Property {
-    id: string;
-    status: "pending" | "available";
-    monthlyRent?: number;
-}
-
-interface RentalRequest {
-    id: string;
-    tenant: { name: string };
-    property: { title: string };
-    moveInDate: string;
-    status: string;
-}
 
 type StatusVariant = Record<string, "default" | "secondary" | "destructive" | "outline">;
 

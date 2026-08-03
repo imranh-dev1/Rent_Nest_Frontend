@@ -29,6 +29,7 @@ export async function handleUpdateProperty(id: string, data: CreatePropertyPaylo
 
     if (result.success) {
         revalidateTag("properties", "max");
+        revalidateTag("my-properties", "max");
     }
 
     return result;

@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers"; 
+import { cookies } from "next/headers";
 
 export const handleCreateProperty = async (data: any) => {
     const cookieStore = await cookies();
@@ -18,7 +18,8 @@ export const handleCreateProperty = async (data: any) => {
     const result = await response.json();
 
     if (result.success) {
-        revalidateTag("properties", "max"); 
+        revalidateTag("properties", "max");
+        revalidateTag("my-properties", "max");
     }
 
     return result;
