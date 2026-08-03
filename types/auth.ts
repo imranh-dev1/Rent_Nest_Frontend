@@ -42,3 +42,13 @@ export interface IUser {
     createdAt: string;
     updatedAt: string;
 }
+
+
+export interface ProfileFormValues {
+    name: string;
+    email: string;
+    phone?: string;
+    profileImg?: string;
+    role: "ADMIN" | "LANDLORD" | "TENANT";
+    status: "ACTIVE" | "BLOCKED";
+}
