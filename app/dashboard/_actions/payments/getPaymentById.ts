@@ -18,7 +18,7 @@ export const getPaymentById = async (id: string) => {
     });
 
     if (!response.ok) {
-        throw new Error('Failed to fetch payment');
+        throw new Error('Failed to fetch payment details');
     }
 
     return response.json();
