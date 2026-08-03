@@ -3,26 +3,22 @@
 import { cookies } from "next/headers";
 
 
-export const getMyProperties = async () => {
+export const getPaymentById = async (id: string) => {
 
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
 
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/properties/my-properties`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payments/${id}`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
         },
-        cache: "force-cache",
-        next: {
-            tags: ["my-properties"],
-            revalidate: 300,
-        },
+        cache: "no-cache",
     });
 
     if (!response.ok) {
-        throw new Error('Failed to fetch properties');
+        throw new Error('Failed to fetch payment');
     }
 
     return response.json();

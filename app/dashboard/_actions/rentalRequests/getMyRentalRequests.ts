@@ -2,27 +2,24 @@
 
 import { cookies } from "next/headers";
 
-
-export const getMyProperties = async () => {
-
+export const getMyRentalRequests = async () => {
     const cookieStore = await cookies();
+
     const accessToken = cookieStore.get("accessToken")?.value;
 
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/properties/my-properties`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/rental-requests/my-requests`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
         },
         cache: "force-cache",
         next: {
-            tags: ["my-properties"],
-            revalidate: 300,
+            tags: ["my-rental-requests"],
         },
     });
 
     if (!response.ok) {
-        throw new Error('Failed to fetch properties');
+        throw new Error("Failed to fetch rental requests");
     }
 
     return response.json();
