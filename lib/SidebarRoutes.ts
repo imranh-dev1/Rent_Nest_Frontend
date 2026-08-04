@@ -26,12 +26,7 @@ export const sidebarRoutes = {
             title: "Payments",
             href: "/dashboard/tenant/payments",
             icon: CreditCard,
-        },
-        {
-            title: "Reviews",
-            href: "/dashboard/tenant/reviews",
-            icon: Star,
-        },
+        }, 
         {
             title: "Profile",
             href: "/dashboard/tenant/profile",

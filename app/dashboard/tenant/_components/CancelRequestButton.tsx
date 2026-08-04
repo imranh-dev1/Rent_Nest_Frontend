@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 
 export default function CancelRequestButton({
+    status,
     requestId,
 }: {
     requestId: string;
+    status: string
 }) {
     const handleCancel = async () => {
         // call cancel request server action
@@ -13,7 +15,7 @@ export default function CancelRequestButton({
     };
 
     return (
-        <Button
+        <Button disabled={status === "ACTIVE"}
             variant="destructive"
             onClick={handleCancel}
         >

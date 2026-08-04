@@ -203,8 +203,8 @@ export default function PropertyCard({
 
                     </div>
 
-                    <Link href={`/properties/${property.id}`}>
-                        <Button>
+                    <Link  href={`/properties/${property.id}`}>
+                        <Button className="cursor-pointer">
                             View Details
                         </Button>
                     </Link>
