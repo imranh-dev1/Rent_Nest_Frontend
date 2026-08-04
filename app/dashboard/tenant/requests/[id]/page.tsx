@@ -25,6 +25,7 @@ import { getRentalRequestById } from "@/services/getRentalRequestById";
 import CancelRequestButton from "../../_components/CancelRequestButton";
 import CreateReviewDialog from "@/app/dashboard/_components/review/CreateReviewsDialog";
 import { getReviews } from "@/app/dashboard/_actions/reviews/getReviews";
+import { Button } from "@/components/ui/button";
 
 const statusStyles = {
     ACTIVE:
@@ -71,11 +72,18 @@ export default async function TenantRequestDetails({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
+                    {request.status === "ACTIVE" ? (
+                        <CreateReviewDialog propertyId={request.propertyId} />
+                    ) : (
+                        <Button disabled>
+                            Review Available After Payment
+                        </Button>
+                    )}
 
-                    <CreateReviewDialog propertyId={request.propertyId} />
-
-                    <CancelRequestButton status={request.status} requestId={request.id} />
-
+                    <CancelRequestButton
+                        status={request.status}
+                        requestId={request.id}
+                    />
                 </div>
 
             </div>

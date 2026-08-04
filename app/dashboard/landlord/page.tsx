@@ -73,7 +73,7 @@ export default async function DashboardLandlord() {
                     </CardHeader>
 
                     <CardContent>
-                        <h3 className="text-3xl font-bold">{properties.filter((p: any) => p.status === "pending").length || 0}</h3>
+                        <h3 className="text-3xl font-bold">{rentalRequests.filter((p: any) => p.status === "PENDING").length || 0}</h3>
 
                         <p className="mt-2 text-sm text-muted-foreground">
                             Waiting for approval
@@ -109,7 +109,7 @@ export default async function DashboardLandlord() {
                     </CardHeader>
 
                     <CardContent>
-                        <h3 className="text-3xl font-bold">{properties.filter((p: any) => p.status === "available").length || 0}</h3>
+                        <h3 className="text-3xl font-bold">{properties.filter((p: any) => p.status === "AVAILABLE").length || 0}</h3>
 
                         <p className="mt-2 text-sm text-muted-foreground">
                             Ready for rent

@@ -51,22 +51,6 @@ const navItems = [
         title: "Properties",
         href: "/properties",
     },
-    {
-        title: "Apartments",
-        href: "/apartments",
-    },
-    {
-        title: "Agents",
-        href: "/agents",
-    },
-    {
-        title: "About",
-        href: "/about",
-    },
-    {
-        title: "Contact",
-        href: "/contact",
-    },
 ];
 
 interface NavbarProps {
@@ -212,12 +196,14 @@ export default function Navbar({ user }: NavbarProps) {
                                         My Profile
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer" asChild>
-                                    <Link href={createPropertyPath}>
-                                        <Home className="mr-2 h-4 w-4" />
-                                        Create Property
-                                    </Link>
-                                </DropdownMenuItem>
+                                {
+                                    user.role === "LANDLORD" && <DropdownMenuItem className="cursor-pointer" asChild>
+                                        <Link href={createPropertyPath}>
+                                            <Home className="mr-2 h-4 w-4" />
+                                            Create Property
+                                        </Link>
+                                    </DropdownMenuItem>
+                                }
 
                                 <DropdownMenuSeparator />
 

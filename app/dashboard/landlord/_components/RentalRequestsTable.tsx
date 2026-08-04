@@ -15,6 +15,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { updateRentalRequestStatus } from "../../_actions/rentalRequests/updateRentalRequestStatus";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { cancelRentalRequest } from "../../_actions/rentalRequests/cancelRentalRequest";
 
 interface RentalRequest {
     id: string;
@@ -43,8 +47,32 @@ interface RentalRequestsTableProps {
 }
 
 export default function RentalRequestsTable({ requests, }: RentalRequestsTableProps) {
+    const router = useRouter()
+    const handleStatusUpdate = async (
+        id: string,
+        status: "APPROVED" | "REJECTED"
+    ) => {
+        const res = await updateRentalRequestStatus(id, status);
 
-    // console.log(requests)
+        if (res.success) {
+            toast.success(`Request ${status.toLowerCase()} successfully.`);
+            router.refresh();
+        } else {
+            toast.error(res.message);
+        }
+    };
+
+
+    const handleCancel = async (id: string) => {
+        const res = await cancelRentalRequest(id);
+
+        if (res.success) {
+            toast.success("Request cancelled successfully.");
+            router.refresh();
+        } else {
+            toast.error(res.message);
+        }
+    };
 
     return (
         <div className="overflow-hidden border py-4 px-6">
@@ -134,7 +162,7 @@ export default function RentalRequestsTable({ requests, }: RentalRequestsTablePr
                                         request.status === "ACTIVE"
                                             ? "outline"
                                             : request.status === "APPROVED"
-                                                ? "default"
+                                                ? "secondary"
                                                 : "destructive"
                                     }
                                 >
@@ -171,6 +199,9 @@ export default function RentalRequestsTable({ requests, }: RentalRequestsTablePr
                                         size="icon"
                                         variant="default"
                                         disabled={request.status !== "PENDING"}
+                                        onClick={() =>
+                                            handleStatusUpdate(request.id, "APPROVED")
+                                        }
                                     >
                                         <Check className="h-4 w-4" />
                                     </Button>
@@ -179,6 +210,9 @@ export default function RentalRequestsTable({ requests, }: RentalRequestsTablePr
                                         size="icon"
                                         variant="destructive"
                                         disabled={request.status !== "PENDING"}
+                                        onClick={() =>
+                                            handleCancel(request.id)
+                                        }
                                     >
                                         <X className="h-4 w-4" />
                                     </Button>

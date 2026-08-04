@@ -1,6 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cancelRentalRequest } from "../../_actions/rentalRequests/cancelRentalRequest";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CancelRequestButton({
     status,
@@ -9,9 +12,22 @@ export default function CancelRequestButton({
     requestId: string;
     status: string
 }) {
+    const router = useRouter();
+
     const handleCancel = async () => {
-        // call cancel request server action
-        console.log(requestId);
+        try {
+            const res = await cancelRentalRequest(requestId);
+
+            if (res.success) {
+                toast.success(res.message);
+                router.refresh();
+            } else {
+                toast.error(res.message);
+            }
+        } catch (error) {
+            toast.error("Something went wrong.");
+            console.error(error);
+        }
     };
 
     return (

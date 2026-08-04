@@ -30,7 +30,7 @@ export default function CreateReviewDialog({
     const [comment, setComment] = useState("");
     const router = useRouter();
 
-    
+
 
     const handleSubmit = async () => {
         const payload = {
@@ -79,7 +79,7 @@ export default function CreateReviewDialog({
 
                         <div className="flex gap-2">
                             {[1, 2, 3, 4, 5].map((value) => (
-                                <button
+                                <Button variant="outline"
                                     key={value}
                                     type="button"
                                     onClick={() => setRating(value)}
@@ -90,7 +90,7 @@ export default function CreateReviewDialog({
                                             : "text-gray-300"
                                             }`}
                                     />
-                                </button>
+                                </Button>
                             ))}
                         </div>
                     </div>

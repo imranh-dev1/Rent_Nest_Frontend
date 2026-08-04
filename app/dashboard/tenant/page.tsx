@@ -28,13 +28,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { getMyRentalRequests } from "../_actions/rentalRequests/getMyRentalRequests";
+import { toast } from "sonner";
+import { createPayment } from "../_actions/payments/createPayment";
+import PaymentButton from "./_components/PaymentButton";
 
 
 const statusVariant = { ACTIVE: "secondary", APPROVED: "default", REJECTED: "destructive", CANCELLED: "outline" } as const;
 
 export default async function DashboardTenant() {
     const { data: rentalRequests } = await getMyRentalRequests();
-
     return (
         <div className="space-y-8">
 
@@ -191,6 +193,7 @@ export default async function DashboardTenant() {
                                     <TableHead>Move In</TableHead>
 
                                     <TableHead>Status</TableHead>
+                                    <TableHead>Pay</TableHead>
 
                                     <TableHead className="text-right">
                                         Action
@@ -234,6 +237,13 @@ export default async function DashboardTenant() {
                                                     {request.status}
                                                 </Badge>
 
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <PaymentButton
+                                                    requestId={request.id}
+                                                    status={request.status}
+                                                />
                                             </TableCell>
 
                                             <TableCell className="text-right">

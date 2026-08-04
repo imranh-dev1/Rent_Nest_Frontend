@@ -12,6 +12,7 @@ import PropertyGallery from "../../_components/propertiesDetails/PropertyGallery
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getReviews } from "@/app/dashboard/_actions/reviews/getReviews";
 import { MessageSquare, Star, User } from "lucide-react";
+import { getCurrentUser } from "@/services/auth.service";
 
 interface PageProps {
     params: Promise<{
@@ -26,6 +27,7 @@ export default async function PropertyDetailsPage({
 
     const property = await getPropertyById(id);
     const { data: reviews } = await getReviews(id);
+    const user = await getCurrentUser()
 
     console.log(reviews)
 
@@ -61,7 +63,7 @@ export default async function PropertyDetailsPage({
 
                         <div className="sticky top-24">
 
-                            <RequestCard property={property} />
+                            <RequestCard user={user} property={property} />
 
                         </div>
 

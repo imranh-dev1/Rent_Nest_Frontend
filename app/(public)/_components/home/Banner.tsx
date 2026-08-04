@@ -7,7 +7,7 @@ import { ArrowRight, HousePlug, MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function Banner() {
+export default function Banner({ user }: any) {
     return (
         <section className="relative overflow-hidden">
             {/* Background Image */}
@@ -90,15 +90,27 @@ export default function Banner() {
                                 </Link>
                             </Button>
 
-                            <Button
-                                variant="outline"
-                                size="lg"
-                                asChild
-                            >
-                                <Link href="/dashboard/landlord/properties/new">
-                                    List Your Property
-                                </Link>
-                            </Button>
+                            {user?.role === "LANDLORD" ? (
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    asChild
+                                >
+                                    <Link href="/dashboard/landlord/properties/create">
+                                        List Your Property
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    asChild
+                                >
+                                    <Link href="/dashboard/tenant/profile">
+                                        Become a Landlord
+                                    </Link>
+                                </Button>
+                            )}
                         </div>
 
                         {/* Stats */}

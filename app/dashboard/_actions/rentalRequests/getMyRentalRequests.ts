@@ -17,10 +17,7 @@ export const getMyRentalRequests = async () => {
             tags: ["my-rental-requests"],
         },
     });
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch rental requests");
-    }
+ 
 
     return response.json();
 };

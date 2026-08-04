@@ -129,6 +129,7 @@ export default async function TenantRequestsPage() {
                                                 {request.status}
                                             </Badge>
                                         </TableCell>
+                                        
 
                                         <TableCell>
                                             {new Date(request.createdAt).toLocaleDateString(

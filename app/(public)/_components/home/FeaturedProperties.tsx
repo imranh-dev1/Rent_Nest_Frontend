@@ -32,7 +32,7 @@ export default function FeaturedProperties({ properties }: FeaturedProperties) {
                     </div>
 
                     <Link href="/properties">
-                        <Button variant="outline">
+                        <Button className="cursor-pointer" variant="outline">
                             View All <MoveRight />
                         </Button>
                     </Link>
@@ -45,7 +45,7 @@ export default function FeaturedProperties({ properties }: FeaturedProperties) {
                         key={property.id}
                         property={property}
                     />))}
-                </div> 
+                </div>
             </div>
         </section>
     );

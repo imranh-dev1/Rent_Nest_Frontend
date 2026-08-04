@@ -26,6 +26,9 @@ interface Props {
 }
 
 export default function PropertyTable({ properties, }: Props) {
+
+    // console.log(properties)
+
     const router = useRouter();
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const handleDelete = async (id: string) => {

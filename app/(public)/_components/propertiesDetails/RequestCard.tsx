@@ -20,14 +20,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { IUser } from "@/types/auth";
+import RentalRequestDialog from "../rentalRequest/RentalRequestDialog";
+import { useState } from "react";
 
 interface Props {
     property: IProperty;
+    user: IUser
 }
 
 export default function RequestCard({
+    user,
     property,
 }: Props) {
+    const [open, setOpen] = useState(false);
+
     return (
         <Card className="px-6 py-8 border shadow-lg">
 
@@ -111,11 +118,18 @@ export default function RequestCard({
                         className="w-full"
                         size="lg"
                         disabled={property.availability === "RENTED"}
+                        onClick={() => setOpen(true)}
                     >
                         {property.availability === "AVAILABLE"
                             ? "Request Rental"
                             : "Property Already Rented"}
                     </Button>
+
+                    <RentalRequestDialog
+                        propertyId={property.id}
+                        open={open}
+                        onOpenChange={setOpen}
+                    />
 
                     <Button
                         variant="outline"
