@@ -15,7 +15,7 @@ RentNest is a modern, responsive rental property marketplace built with **Next.j
 
 ## 📸 Preview
 
-*Add screenshots or a GIF of your application here.*
+*![Home Page](public/screenshots/home.png)*
 
 ---
 
