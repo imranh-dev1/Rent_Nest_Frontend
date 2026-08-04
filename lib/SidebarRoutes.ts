@@ -8,6 +8,7 @@ import {
     PlusCircle,
     Users,
     Building2,
+    Tags, 
 } from "lucide-react";
 
 export const sidebarRoutes = {
@@ -72,6 +73,11 @@ export const sidebarRoutes = {
             title: "Users",
             href: "/dashboard/admin/users",
             icon: Users,
+        },
+        {
+            title: "Categories",
+            href: "/dashboard/admin/categories",
+            icon: Tags,
         },
         {
             title: "Properties",

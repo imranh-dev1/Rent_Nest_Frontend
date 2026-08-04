@@ -1,24 +1,17 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 export async function getCategories() {
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/categories`,
-            {
-                method: "GET",
-                next: {
-                    tags: ["categories"],
-                },
-            }
-        );
+    const token = (await cookies()).get("accessToken")?.value;
 
-        const result = await res.json();
-
-        return result.data;
-    } catch (error) {
-        console.error(error);
-        return [];
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
     }
+    );
+
+    return res.json();
 }

@@ -25,6 +25,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "@/app/(auth)/_actions/auth/logout";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface UserDropdownProps {
   user: {
@@ -36,11 +39,25 @@ interface UserDropdownProps {
 }
 
 export default function UserDropdown({ user }: UserDropdownProps) {
+
+  const router = useRouter()
+
   const initials = user?.name
     .split(" ")
     .map((item) => item[0])
     .join("")
     .toUpperCase();
+
+  const handleLogout = async () => {
+    const result = await logout();
+
+    if (result.success) {
+      toast.success(result.message);
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -85,21 +102,11 @@ export default function UserDropdown({ user }: UserDropdownProps) {
               Profile
             </Link>
           </DropdownMenuItem>
-
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </DropdownMenuItem>
-
-          <DropdownMenuItem>
-            <CreditCard className="mr-2 h-4 w-4" />
-            Billing
-          </DropdownMenuItem>
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem className="text-destructive focus:text-destructive">
+        <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
           <LogOut className="mr-2 h-4 w-4" />
           Logout
         </DropdownMenuItem>
