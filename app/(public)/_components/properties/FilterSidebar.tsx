@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     RotateCcw,
     Search,
@@ -23,38 +23,30 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-
-const amenities = [
-    "WiFi",
-    "Parking",
-    "Lift",
-    "Generator",
-    "Security",
-    "Gas",
-    "Electricity",
-];
+import { Slider } from "@/components/ui/slider"; 
 
 export default function FilterSidebar() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const [search, setSearch] = useState(
-        searchParams.get("search") ?? ""
-    );
+    const [search, setSearch] = useState("");
+    const [city, setCity] = useState("");
+    const [price, setPrice] = useState([25000]);
+    const [availability, setAvailability] = useState(""); 
 
-    const [city, setCity] = useState(
-        searchParams.get("city") ?? ""
-    );
+    useEffect(() => {
+        setSearch(searchParams.get("search") ?? "");
+        setCity(searchParams.get("city") ?? "");
 
-    const [price, setPrice] = useState([
-        Number(searchParams.get("maxPrice") ?? 25000),
-    ]);
+        setPrice([
+            Number(searchParams.get("maxPrice") ?? 25000),
+        ]);
 
-    const [availability, setAvailability] = useState(
-        searchParams.get("availability") ?? ""
-    );
+        setAvailability(
+            searchParams.get("availability") ?? ""
+        );
+    }, [searchParams]);
 
     const handleApplyFilters = () => {
         const params = new URLSearchParams(
@@ -74,13 +66,7 @@ export default function FilterSidebar() {
         }
 
         params.set("minPrice", "5000");
-        params.set("maxPrice", price[0].toString());
-
-        if (availability) {
-            params.set("availability", availability);
-        } else {
-            params.delete("availability");
-        }
+        params.set("maxPrice", price[0].toString()); 
 
         params.set("page", "1");
 
@@ -98,12 +84,12 @@ export default function FilterSidebar() {
 
     return (
         <Card className="p-6 shadow-sm">
-
             {/* Header */}
-
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h2 className="text-xl font-bold">Filters</h2>
+                    <h2 className="text-xl font-bold">
+                        Filters
+                    </h2>
 
                     <p className="text-sm text-muted-foreground">
                         Find properties faster
@@ -120,9 +106,7 @@ export default function FilterSidebar() {
             </div>
 
             <div className="space-y-8">
-
                 {/* Search */}
-
                 <div className="space-y-3">
                     <Label>Search</Label>
 
@@ -131,7 +115,9 @@ export default function FilterSidebar() {
 
                         <Input
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            onChange={(e) =>
+                                setSearch(e.target.value)
+                            }
                             placeholder="Search property..."
                             className="pl-9"
                         />
@@ -139,7 +125,6 @@ export default function FilterSidebar() {
                 </div>
 
                 {/* Location */}
-
                 <div className="space-y-3">
                     <Label>Location</Label>
 
@@ -172,13 +157,13 @@ export default function FilterSidebar() {
                 </div>
 
                 {/* Price */}
-
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
                         <Label>Monthly Rent</Label>
 
                         <span className="text-sm font-medium text-primary">
-                            ৳5,000 - ৳{price[0].toLocaleString()}
+                            ৳5,000 - ৳
+                            {price[0].toLocaleString()}
                         </span>
                     </div>
 
@@ -192,7 +177,6 @@ export default function FilterSidebar() {
                 </div>
 
                 {/* Bedrooms */}
-
                 <div className="space-y-3">
                     <Label>Bedrooms</Label>
 
@@ -222,7 +206,6 @@ export default function FilterSidebar() {
                 </div>
 
                 {/* Bathrooms */}
-
                 <div className="space-y-3">
                     <Label>Bathrooms</Label>
 
@@ -249,82 +232,9 @@ export default function FilterSidebar() {
                             </SelectItem>
                         </SelectContent>
                     </Select>
-                </div>
-                {/* Property Type */}
+                </div> 
 
-                <div className="space-y-4">
-                    <Label>Property Type</Label>
-
-                    <div className="space-y-3">
-                        {["Apartment", "House", "Villa", "Studio"].map((type) => (
-                            <div
-                                key={type}
-                                className="flex items-center space-x-2"
-                            >
-                                <Checkbox id={type} />
-
-                                <Label
-                                    htmlFor={type}
-                                    className="cursor-pointer font-normal"
-                                >
-                                    {type}
-                                </Label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Amenities */}
-
-                <div className="space-y-4">
-                    <Label>Amenities</Label>
-
-                    <div className="space-y-3">
-                        {amenities.map((item) => (
-                            <div
-                                key={item}
-                                className="flex items-center space-x-2"
-                            >
-                                <Checkbox id={item} />
-
-                                <Label
-                                    htmlFor={item}
-                                    className="cursor-pointer font-normal"
-                                >
-                                    {item}
-                                </Label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Availability */}
-
-                <div className="space-y-3">
-                    <Label>Availability</Label>
-
-                    <Select
-                        value={availability}
-                        onValueChange={setAvailability}
-                    >
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select availability" />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                            <SelectItem value="AVAILABLE">
-                                Available
-                            </SelectItem>
-
-                            <SelectItem value="RENTED">
-                                Rented
-                            </SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                {/* Apply Button */}
-
+                {/* Apply */}
                 <Button
                     onClick={handleApplyFilters}
                     className="w-full"

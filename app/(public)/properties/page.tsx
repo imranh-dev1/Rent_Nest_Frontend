@@ -4,15 +4,13 @@ import PropertyGrid from "../_components/properties/PropertyGrid";
 import FilterSidebar from "../_components/properties/FilterSidebar";
 import { getProperties } from "../_actions/property/getProperties";
 import AppPagination from "@/components/shared/AppPagination";
-import { PropertySearchParams } from "@/types/property";
+import { PropertySearchParams } from "@/types/property"; 
 
 
 interface PropertiesPageProps {
     searchParams: Promise<PropertySearchParams>;
 }
-export default async function PropertiesPage({
-    searchParams,
-}: PropertiesPageProps) {
+export default async function PropertiesPage({ searchParams }: PropertiesPageProps) {
     const params = await searchParams;
 
     const page = Number(params.page ?? 1);
@@ -29,10 +27,9 @@ export default async function PropertiesPage({
         availability: params.availability,
         sortBy: params.sortBy ?? "createdAt",
         sortOrder: (params.sortOrder as "asc" | "desc") ?? "desc",
-    });
+    }); 
 
-    // console.log(properties, meta)
-
+    
 
     return (
 
