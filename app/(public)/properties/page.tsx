@@ -4,7 +4,7 @@ import PropertyGrid from "../_components/properties/PropertyGrid";
 import FilterSidebar from "../_components/properties/FilterSidebar";
 import { getProperties } from "../_actions/property/getProperties";
 import AppPagination from "@/components/shared/AppPagination";
-import { PropertySearchParams } from "@/types/property"; 
+import { PropertySearchParams } from "@/types/property";
 
 
 interface PropertiesPageProps {
@@ -12,9 +12,6 @@ interface PropertiesPageProps {
 }
 export default async function PropertiesPage({ searchParams }: PropertiesPageProps) {
     const params = await searchParams;
-
-    const page = Number(params.page ?? 1);
-    const limit = Number(params.limit ?? 9);
 
     const { data: properties, meta } = await getProperties({
         page: Number(params.page ?? 1),
@@ -27,9 +24,10 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
         availability: params.availability,
         sortBy: params.sortBy ?? "createdAt",
         sortOrder: (params.sortOrder as "asc" | "desc") ?? "desc",
-    }); 
+    });
 
-    
+    // console.log(meta)
+
 
     return (
 
@@ -54,7 +52,10 @@ export default async function PropertiesPage({ searchParams }: PropertiesPagePro
                         <PropertyGrid properties={properties} />
 
                         {meta.totalPage > 1 && (
-                            <AppPagination currentPage={meta.page} totalPages={meta.totalPage} />
+                            <AppPagination
+                                currentPage={meta.page}
+                                totalPages={meta.totalPage}
+                            />
                         )}
                     </div>
                 </div>

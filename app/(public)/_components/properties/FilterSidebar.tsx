@@ -162,7 +162,7 @@ export default function FilterSidebar() {
                         <Label>Monthly Rent</Label>
 
                         <span className="text-sm font-medium text-primary">
-                            ৳5,000 - ৳
+                            ৳3,000 - ৳
                             {price[0].toLocaleString()}
                         </span>
                     </div>
@@ -171,7 +171,7 @@ export default function FilterSidebar() {
                         value={price}
                         onValueChange={setPrice}
                         max={80000}
-                        min={5000}
+                        min={3000}
                         step={1000}
                     />
                 </div>
