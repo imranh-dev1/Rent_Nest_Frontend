@@ -52,6 +52,14 @@ const navItems = [
         title: "Properties",
         href: "/properties",
     },
+    {
+        title: "About",
+        href: "/about",
+    },
+    {
+        title: "Contact",
+        href: "/contact",
+    },
 ];
 
 interface NavbarProps {
