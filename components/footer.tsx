@@ -12,8 +12,9 @@ import {
 } from "react-icons/fa6";
 
 import {
-  MapPin,
+  ArrowUpRight,
   Mail,
+  MapPin,
   Phone,
   Send,
 } from "lucide-react";
@@ -23,169 +24,179 @@ import logo from "@/public/assets/Rent-Nest-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const quickLinks = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "Properties",
-    href: "/properties",
-  },
-  {
-    name: "Apartments",
-    href: "/apartments",
-  },
-  {
-    name: "Agents",
-    href: "/agents",
-  },
-  {
-    name: "Contact",
-    href: "/contact",
-  },
-];
+const footerLinks = {
+  explore: [
+    { name: "Home", href: "/" },
+    { name: "Properties", href: "/properties" },
+    { name: "Apartments", href: "/apartments" },
+    { name: "Family Houses", href: "/properties?type=house" },
+    { name: "Luxury Villas", href: "/properties?type=villa" },
+  ],
 
-const companyLinks = [
-  {
-    name: "About Us",
-    href: "/about",
-  },
-  {
-    name: "Careers",
-    href: "/careers",
-  },
-  {
-    name: "Blog",
-    href: "/blog",
-  },
-  {
-    name: "FAQ",
-    href: "/faq",
-  },
-];
+  company: [
+    { name: "About Us", href: "/about" },
+    { name: "Contact", href: "/contact" },
+    { name: "Blog", href: "/blog" },
+    { name: "FAQ", href: "/faq" },
+    { name: "Careers", href: "/careers" },
+  ],
 
-const supportLinks = [
-  {
-    name: "Help Center",
-    href: "/help",
-  },
-  {
-    name: "Privacy Policy",
-    href: "/privacy-policy",
-  },
-  {
-    name: "Terms & Conditions",
-    href: "/terms",
-  },
-  {
-    name: "Report Issue",
-    href: "/report",
-  },
-];
+  support: [
+    { name: "Help Center", href: "/help" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms & Conditions", href: "/terms" },
+    { name: "Cookie Policy", href: "/cookies" },
+    { name: "Report an Issue", href: "/report" },
+  ],
+};
 
 const socialLinks = [
   {
+    name: "Facebook",
     icon: FaFacebookF,
-    href: "#",
+    href: "https://facebook.com",
   },
   {
+    name: "Instagram",
     icon: FaInstagram,
-    href: "#",
+    href: "https://instagram.com",
   },
   {
+    name: "LinkedIn",
     icon: FaLinkedinIn,
-    href: "#",
+    href: "https://linkedin.com",
   },
   {
+    name: "GitHub",
     icon: FaGithub,
-    href: "#",
+    href: "https://github.com",
   },
   {
+    name: "X",
     icon: FaXTwitter,
-    href: "#",
+    href: "https://x.com",
   },
 ];
 
 export default function Footer() {
-
   return (
-    <footer className="border-t bg-muted/20">
+    <footer className="relative overflow-hidden border-t bg-muted/20">
 
-      {/* Top */}
+      {/* Decorative Background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
+      </div>
 
-      <div className="container mx-auto px-4 pt-20 pb-6">
+      <div className="relative mx-auto container px-4 sm:px-6 lg:px-8"> 
 
-        <div className="grid gap-14 lg:grid-cols-12">
+        {/* ───────────────── MAIN FOOTER ───────────────── */}
+
+        <div className="grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
 
           {/* Brand */}
 
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-3">
 
             <Link
               href="/"
-              className="flex items-center gap-3"
+              className="group inline-flex items-center gap-3"
             >
-              <Image
-                src={logo}
-                alt="RentNest"
-                width={70}
-                height={70}
-              />
+
+              <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-primary/10 ring-1 ring-primary/20 transition duration-300 group-hover:scale-105">
+                <Image
+                  src={logo}
+                  alt="RentNest logo"
+                  width={42}
+                  height={42}
+                  className="object-contain"
+                />
+              </div>
 
               <div>
-                <h2 className="text-2xl font-bold">
+                <h2 className="font-heading text-2xl font-bold tracking-tight">
                   RentNest
                 </h2>
 
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs font-medium text-muted-foreground">
                   Find Your Perfect Home
                 </p>
               </div>
+
             </Link>
 
-            <p className="mt-6 max-w-md leading-7 text-muted-foreground">
-              RentNest is a trusted rental platform that
-              connects tenants and landlords with verified
-              listings, secure experiences, and an easy
-              property management solution.
+            <p className="mt-6 max-w-sm text-sm leading-7 text-muted-foreground">
+              A modern rental marketplace connecting tenants
+              with trusted landlords and verified properties
+              for a simpler, safer renting experience.
             </p>
 
             {/* Contact */}
 
-            <div className="mt-8 space-y-4">
+            <div className="mt-7 space-y-4">
 
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <MapPin className="h-5 w-5 text-primary" />
-                Rajshahi, Bangladesh
-              </div>
+              <Link
+                href="https://maps.google.com/?q=Rajshahi,Bangladesh"
+                target="_blank"
+                className="group flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border bg-background transition group-hover:border-primary/30 group-hover:bg-primary/10">
+                  <MapPin
+                    size={16}
+                    className="text-primary"
+                  />
+                </span>
 
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Mail className="h-5 w-5 text-primary" />
-                support@rentnest.com
-              </div>
+                <span>Rajshahi, Bangladesh</span>
+              </Link>
 
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Phone className="h-5 w-5 text-primary" />
-                +880 1700-000000
-              </div>
+              <a
+                href="mailto:support@rentnest.com"
+                className="group flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border bg-background transition group-hover:border-primary/30 group-hover:bg-primary/10">
+                  <Mail
+                    size={16}
+                    className="text-primary"
+                  />
+                </span>
+
+                <span>support@rentnest.com</span>
+              </a>
+
+              <a
+                href="tel:+8801700000000"
+                className="group flex items-center gap-3 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border bg-background transition group-hover:border-primary/30 group-hover:bg-primary/10">
+                  <Phone
+                    size={16}
+                    className="text-primary"
+                  />
+                </span>
+
+                <span>+880 1700-000000</span>
+              </a>
 
             </div>
 
             {/* Social */}
 
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-8 flex items-center gap-2.5">
 
-              {socialLinks.map((social, index) => {
+              {socialLinks.map((social) => {
                 const Icon = social.icon;
 
                 return (
                   <Link
-                    key={index}
+                    key={social.name}
                     href={social.href}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border bg-background transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-primary hover:text-white"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border bg-background text-muted-foreground transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:shadow-primary/20"
                   >
-                    <Icon className="text-lg" />
+                    <Icon size={16} />
                   </Link>
                 );
               })}
@@ -194,23 +205,28 @@ export default function Footer() {
 
           </div>
 
-          {/* Quick Links */}
+          {/* Explore */}
 
           <div className="lg:col-span-2">
 
-            <h3 className="mb-6 text-lg font-semibold">
-              Quick Links
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider">
+              Explore
             </h3>
 
             <ul className="space-y-4">
 
-              {quickLinks.map((item) => (
+              {footerLinks.explore.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-muted-foreground transition hover:text-primary"
+                    className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
-                    {item.name}
+                    <span>{item.name}</span>
+
+                    <ArrowUpRight
+                      size={13}
+                      className="ml-1 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                    />
                   </Link>
                 </li>
               ))}
@@ -223,19 +239,24 @@ export default function Footer() {
 
           <div className="lg:col-span-2">
 
-            <h3 className="mb-6 text-lg font-semibold">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider">
               Company
             </h3>
 
             <ul className="space-y-4">
 
-              {companyLinks.map((item) => (
+              {footerLinks.company.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-muted-foreground transition hover:text-primary"
+                    className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
-                    {item.name}
+                    <span>{item.name}</span>
+
+                    <ArrowUpRight
+                      size={13}
+                      className="ml-1 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                    />
                   </Link>
                 </li>
               ))}
@@ -248,19 +269,24 @@ export default function Footer() {
 
           <div className="lg:col-span-2">
 
-            <h3 className="mb-6 text-lg font-semibold">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider">
               Support
             </h3>
 
             <ul className="space-y-4">
 
-              {supportLinks.map((item) => (
+              {footerLinks.support.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="text-muted-foreground transition hover:text-primary"
+                    className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-primary"
                   >
-                    {item.name}
+                    <span>{item.name}</span>
+
+                    <ArrowUpRight
+                      size={13}
+                      className="ml-1 opacity-0 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                    />
                   </Link>
                 </li>
               ))}
@@ -268,34 +294,52 @@ export default function Footer() {
             </ul>
 
           </div>
+
           {/* Newsletter */}
 
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
 
-            <div className="rounded-3xl border bg-background p-6 shadow-sm">
+            <div className="rounded-3xl border bg-background/70 p-6 shadow-sm backdrop-blur-xl">
 
-              <h3 className="text-xl font-bold">
+              <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Mail size={18} />
+              </div>
+
+              <h3 className="text-lg font-semibold">
                 Stay Updated
               </h3>
 
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                Subscribe to receive the latest property
-                listings, rental tips, and exclusive offers.
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                Get new listings, rental tips and
+                marketplace updates.
               </p>
 
-              <form className="mt-6 space-y-3">
+              <form className="mt-5 space-y-3">
 
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Your email address"
+                  aria-label="Email address"
+                  className="h-10 bg-background"
                 />
 
-                <Button className="w-full">
-                  <Send className="mr-2 h-4 w-4" />
+                <Button
+                  type="submit"
+                  className="h-10 w-full rounded-xl"
+                >
+                  <Send
+                    size={15}
+                    className="mr-2"
+                  />
                   Subscribe
                 </Button>
 
               </form>
+
+              <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
+                By subscribing, you agree to our
+                privacy policy.
+              </p>
 
             </div>
 
@@ -303,35 +347,35 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom */}
+        {/* ───────────────── BOTTOM ───────────────── */}
 
-        <div className="border-t pt-8 mt-8">
+        <div className="border-t py-7">
 
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
 
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground sm:text-sm">
               © 2026 RentNest. All rights reserved.
             </p>
 
-            <div className="flex flex-wrap items-center gap-6">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
 
               <Link
                 href="/privacy-policy"
-                className="text-sm text-muted-foreground transition hover:text-primary"
+                className="text-xs text-muted-foreground transition hover:text-primary sm:text-sm"
               >
                 Privacy Policy
               </Link>
 
               <Link
                 href="/terms"
-                className="text-sm text-muted-foreground transition hover:text-primary"
+                className="text-xs text-muted-foreground transition hover:text-primary sm:text-sm"
               >
                 Terms & Conditions
               </Link>
 
               <Link
                 href="/cookies"
-                className="text-sm text-muted-foreground transition hover:text-primary"
+                className="text-xs text-muted-foreground transition hover:text-primary sm:text-sm"
               >
                 Cookie Policy
               </Link>
@@ -346,4 +390,4 @@ export default function Footer() {
 
     </footer>
   );
-}
+} 

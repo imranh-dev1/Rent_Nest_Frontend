@@ -198,7 +198,7 @@ export default function ContactPage() {
 
                         {/* Heading */}
 
-                        <h1 className="mt-8 text-5xl font-bold tracking-[-0.04em] sm:text-6xl lg:text-8xl">
+                        <h1 className="mt-8 text-xl font-bold tracking-[-0.04em] sm:text-6xl lg:text-8xl">
 
                             Let&apos;s make your
 
@@ -256,7 +256,7 @@ export default function ContactPage() {
                 CONTACT CARDS
             ====================================================== */}
 
-            <section className="relative py-16 sm:py-20">
+            <section className="relative pt-20">
 
                 <div className="container mx-auto px-4">
 

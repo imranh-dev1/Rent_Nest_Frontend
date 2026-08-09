@@ -45,9 +45,9 @@ export default function PropertyCard({
                 </Badge>
 
                 <Badge
-                    className={`absolute right-4 top-4 rounded-full px-3 py-1 ${property.availability === "AVAILABLE"
+                    className={`absolute right-4 top-4 rounded-full px-3 py-1 text-white ${property.availability === "AVAILABLE"
                         ? "bg-emerald-600 hover:bg-emerald-700"
-                        : "bg-red-500 hover:bg-red-600"
+                        : "bg-red-500 hover:bg-red-600 "
                         }`}
                 >
                     {property.availability}
