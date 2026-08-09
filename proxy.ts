@@ -6,7 +6,7 @@ import { jwtUtils } from "./utils/verifyToken";
 
 
 
-const AUTH_ROUTES = ["/login", "/register"];
+const AUTH_ROUTES = ["/login", "/signup"];
 
 const PUBLIC_ROUTES = [
     "/",
