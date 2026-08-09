@@ -57,11 +57,11 @@ const testimonials = [
 
 export default function Testimonials() {
     return (
-        <section className="py-20 bg-muted/30 relative overflow-hidden">
+        <section className="py-20 relative overflow-hidden">
 
             <div className="absolute left-0 top-0 -z-10 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
-
             <div className="absolute bottom-0 right-0 -z-10 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+
 
             <div className="container mx-auto text-center">
                 <span className="font-semibold text-primary">
@@ -77,7 +77,7 @@ export default function Testimonials() {
                 </p>
             </div>
 
-            <Carousel className="container mx-auto mt-10 " opts={{ align: "start", loop: true, }} plugins={[
+            <Carousel className="container mx-auto mt-10 px-6" opts={{ align: "start", loop: true, }} plugins={[
                 Autoplay({
                     delay: 4000,
                     stopOnInteraction: false,

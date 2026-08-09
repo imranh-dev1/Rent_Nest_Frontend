@@ -102,7 +102,7 @@ export default function Banner({ user }: any) {
                                 </Button>
                             ) : (
                                 <Button
-                                    variant="outline"
+                                    variant="secondary"
                                     size="lg"
                                     asChild
                                 >

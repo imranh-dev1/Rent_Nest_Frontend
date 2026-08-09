@@ -5,6 +5,8 @@ import FeaturedProperties from "./_components/home/FeaturedProperties";
 import PropertyCategories from "./_components/home/PropertyCategories";
 import Testimonials from "./_components/home/Testimonials";
 import WhyChooseRentNest from "./_components/home/WhyChooseRentNest";
+import HowItWorks from "./_components/home/HowItWorks";
+import PopularLocations from "./_components/home/PopularLocations";
 
 export default async function Page() {
 
@@ -24,6 +26,10 @@ export default async function Page() {
       <PropertyCategories />
 
       <WhyChooseRentNest />
+
+      <HowItWorks />
+
+      <PopularLocations />
 
       <Testimonials />
     </>

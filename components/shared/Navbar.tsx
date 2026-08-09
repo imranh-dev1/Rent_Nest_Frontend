@@ -89,13 +89,8 @@ export default function Navbar({ user }: NavbarProps) {
 
                 <Link
                     href="/"
-                    className="flex items-center gap-2"
-                >
-                    <Image src={logo} width={70} height={70} alt="Rent Nest" />
-
-                    <span className="text-xl font-bold">
-                        RentNest
-                    </span>
+                    className="flex items-center gap-2">
+                    <Image src={logo} width={90} height={90} alt="Rent Nest" />
                 </Link>
 
                 {/* Desktop */}
@@ -207,7 +202,7 @@ export default function Navbar({ user }: NavbarProps) {
                         </DropdownMenu>
                     ) : (
                         <Link href="/login">
-                            <Button variant="outline">
+                            <Button variant="outline" className="cursor-pointer">
                                 <UserIcon className="mr-2 size-4" />
                                 Login
                             </Button>
@@ -256,7 +251,7 @@ export default function Navbar({ user }: NavbarProps) {
                             ))}
 
                             <Button
-                                className="mt-4"
+                                className="mt-4 hover:cursor-pointer"
                                 variant="outline"
                             >
                                 Login
