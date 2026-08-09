@@ -23,13 +23,15 @@ import { Separator } from "@/components/ui/separator";
 import { IUser } from "@/types/auth";
 import RentalRequestDialog from "../rentalRequest/RentalRequestDialog";
 import { useState } from "react";
+import { getCurrentUser } from "@/services/auth.service";
+import { redirect } from "next/navigation";
 
 interface Props {
     property: IProperty;
     user: IUser
 }
 
-export default function RequestCard({
+export default async function RequestCard({
     user,
     property,
 }: Props) {
@@ -117,12 +119,23 @@ export default function RequestCard({
                     <Button
                         className="w-full"
                         size="lg"
-                        disabled={property.availability === "RENTED"}
-                        onClick={() => setOpen(true)}
-                    >
-                        {property.availability === "AVAILABLE"
-                            ? "Request Rental"
-                            : "Property Already Rented"}
+                        disabled={!user || property.availability !== "AVAILABLE"}
+                        onClick={() => {
+                            if (!user) {
+                                redirect('/login')
+                            }
+
+                            if (property.availability !== "AVAILABLE") {
+                                return;
+                            }
+
+                            setOpen(true);
+                        }}>
+                        {!user
+                            ? "Login to Request"
+                            : property.availability === "AVAILABLE"
+                                ? "Request Rental"
+                                : "Property Already Rented"}
                     </Button>
 
                     <RentalRequestDialog

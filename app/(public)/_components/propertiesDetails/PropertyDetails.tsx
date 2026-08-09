@@ -18,7 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
-import { IProperty } from "@/types/property";
+import { IProperty } from "@/types/property"; 
 
 interface Props {
     property: IProperty;
@@ -64,6 +64,8 @@ export default function PropertyDetails({
             value: new Date(property.createdAt).toLocaleDateString(),
         },
     ];
+
+    
 
     return (
         <Card className="px-6 py-8 shadow-sm">
