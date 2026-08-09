@@ -41,6 +41,7 @@ import {
 } from "lucide-react";
 import { logout } from "@/app/(auth)/_actions/auth/logout";
 import { toast } from "sonner";
+import ThemeToggle from "../theme-toggle";
 
 const navItems = [
     {
@@ -120,19 +121,7 @@ export default function Navbar({ user }: NavbarProps) {
 
                 <div className="hidden items-center gap-2 lg:flex">
 
-                    <Button
-                        size="icon"
-                        variant="ghost"
-                    >
-                        <Search className="size-5" />
-                    </Button>
-
-                    <Button
-                        size="icon"
-                        variant="ghost"
-                    >
-                        <Heart className="size-5" />
-                    </Button>
+                    <ThemeToggle />
 
                     {user ? (
                         <DropdownMenu>
