@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
+import { googleLogin } from "../_actions/auth/googleLoging";
 
 
 // =====================================================
@@ -112,10 +113,9 @@ export function LoginForm({
     },
   });
 
-
-  // =================================================
-  // Server Response
-  // =================================================
+  const handleGoogleLogin = () => {
+    googleLogin()
+  }
 
   useEffect(() => {
     if (!state.message) return;
@@ -452,6 +452,7 @@ export function LoginForm({
                   variant="outline"
                   type="button"
                   aria-label="Continue with Google"
+                  onClick={handleGoogleLogin}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

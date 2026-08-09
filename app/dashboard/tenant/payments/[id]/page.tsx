@@ -30,7 +30,7 @@ export default async function PaymentDetailsPage({
     const { id } = await params;
 
     const { data: payment } = await getPaymentById(id);
-    console.log(payment)
+    // console.log(payment)
 
     return (
         <div className="space-y-6">

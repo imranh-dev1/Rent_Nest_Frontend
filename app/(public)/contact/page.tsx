@@ -150,7 +150,7 @@ export default function ContactPage() {
                 setTimeout(resolve, 1200)
             );
 
-            console.log(values);
+            // console.log(values);
 
             reset();
             setSubmitted(true);

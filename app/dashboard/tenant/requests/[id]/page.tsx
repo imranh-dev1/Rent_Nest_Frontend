@@ -51,7 +51,7 @@ export default async function TenantRequestDetails({
     const { data: request } = await getRentalRequestById(id);
     const { data: reviews } = await getReviews(request.propertyId);
 
-    console.log(reviews)
+    // console.log(reviews)
 
     return (
         <div className="space-y-6">
